@@ -1,7 +1,7 @@
-CryptoFyer LiveCoin v0.2
+CryptoFyer LiveCoin v0.3
 ==============
 
-PHP client api for LiveCoin api v0.2
+PHP client api for LiveCoin api v0.3
 
 I am NOT associated, I repeat NOT associated to LiveCoin. Please use at your OWN risk.
 
@@ -12,6 +12,8 @@ Want to help me? You can tip me :)
 LiveCoin Documentation
 ----
 LiveCoin API documentation: https://www.livecoin.net/api?lang=en
+LiveCoin Examples : https://www.livecoin.net/api/examples
+
 
 Prerequisite
 ----
