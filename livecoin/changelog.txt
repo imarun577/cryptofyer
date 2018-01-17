@@ -1,0 +1,15 @@
+v0.2
+- implemented getRestrictions()
+- implemented getCoinInfo()
+- implemented getMaxbidMinask()
+- implemented getTicker()
+- implemented getCurrencyUrl()
+- implemented getAllOrderbook()
+- implemented getOrderbook()
+- implemented getMarketHistory()
+- implemented public send()
+
+
+
+v0.1
+It's alive
