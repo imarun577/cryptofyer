@@ -1,2 +1,8 @@
+v0.2
+- implemented public send()
+- implemented getTicker()
+- implemented getCurrencyUrl()
+- implemented getMarketPair()
+
 v0.1
 It's alive

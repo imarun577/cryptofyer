@@ -1,7 +1,7 @@
-CryptoFyer Binance v0.1
+CryptoFyer Binance v0.2
 ==============
 
-PHP client api for Binance api v0.1
+PHP client api for Binance api v0.2
 
 I am NOT associated, I repeat NOT associated to Binance. Please use at your OWN risk.
 
@@ -11,7 +11,7 @@ Want to help me? You can tip me :)
 
 Binance Documentation
 ----
-Binance API documentation:
+Binance API documentation: https://github.com/binance-exchange/binance-official-api-docs
 
 Prerequisite
 ----
