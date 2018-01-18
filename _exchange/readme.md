@@ -1,7 +1,7 @@
 CryptoFyer Exchange v0.1
 ==============
 
-PHP client api for Exchange api v0.1
+PHP client api for Exchange
 
 I am NOT associated, I repeat NOT associated to Exchange. Please use at your OWN risk.
 
@@ -12,6 +12,7 @@ Want to help me? You can tip me :)
 Exchange Documentation
 ----
 Exchange API documentation:
+
 
 Prerequisite
 ----
@@ -37,5 +38,14 @@ $result = $exchange->getBalance(array("currency" => "BTC"));
 Public API functions
 ----
 
+| Endpoint uri | Api function | Parameters | Remarks |
+| --- | --- | --- | --- |
+|  |  |  |  |
+
+
 Private API functions
 ----
+
+| Endpoint uri | Api function | Parameters | Remarks |
+| --- | --- | --- | --- |
+|  |  |  |  |
