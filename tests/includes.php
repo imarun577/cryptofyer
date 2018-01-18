@@ -13,12 +13,14 @@ include("../bittrex/config.inc.php");
 include("../cryptopia/config.inc.php");
 include("../coinexchange/config.inc.php");
 include("../livecoin/config.inc.php");
+include("../binance/config.inc.php");
 
 $exchangesClasses = array(
   "bittrex" => "BittrexApi" ,
   "cryptopia" => "CryptopiaApi",
   "coinexchange" => "CoinexchangeApi",
-  "livecoin" => "LiveCoinApi"
+  "livecoin" => "LiveCoinApi",
+  "binance" => "BinanceApi"
 );
 $exchangesInstances = array();
 
