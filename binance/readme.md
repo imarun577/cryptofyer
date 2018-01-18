@@ -38,7 +38,7 @@ Public API functions
 ----
 | Endpoint uri | Api function | Parameters | Remarks |
 | --- | --- | --- | --- |
-| api/v3/ticker/price | getTicker() | --- | --- |
+| api/v3/ticker/price | getTicker() |  |  |
 
 Private API functions
 ----
