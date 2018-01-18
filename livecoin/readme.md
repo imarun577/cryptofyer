@@ -38,20 +38,25 @@ $result = $liveCoin->getBalance(array("currency" => "BTC"));
 
 Public API functions
 ----
-- getRestrictions()
-- getCoinInfo()
-- getMaxbidMinask()
-- getTicker()
-- getCurrencyUrl()
-- getAllOrderbook()
-- getOrderbook()
-- getMarketHistory()
+
+| Endpoint uri | Api function | Parameters | Remarks |
+| --- | --- | --- | --- |
+| info/coinInfo | getCoinInfo() |  |  |
+| exchange/restrictions | getRestrictions() |  |  |
+| exchange/maxbid_minask | getMaxbidMinask() |  |  |
+| exchange/ticker | getTicker() |  |  |
+| exchange/all/order_book | getAllOrderbook() |  |  |
+| exchange/order_book | getOrderbook() |  |  |
+| exchange/last_trades | getMarketHistory() |  |  |
 
 Private API functions
 ----
-- getBalance()
-- getBalances()
-- getOrders()
-- getOrder() -> not implemented yet!
-- buy() -> not implemented yet!
-- sell() -> not implemented yet!
+
+| Endpoint uri | Api function | Parameters | Remarks |
+| --- | --- | --- | --- |
+| payment/balance | getBalance() |  |  |
+| payment/balances | getBalances() |  |  |
+| exchange/client_orders | getOrders() |  |  |
+|  | getOrder() |  | not implemented yet! |
+|  | buy() |  | not implemented yet! |
+|  | sell() |  | not implemented yet! |
