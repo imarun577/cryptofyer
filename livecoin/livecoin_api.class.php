@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    0.2
+  * @version    0.4
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "2";
+    private $_version_minor  = "4";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -34,31 +34,26 @@
       if(empty($method)) return array("status" => false , "error" => "method was not defined!");
 
       if(isSet($args["market"])) unset($args["market"]);
-      if(isSet($args["currencyPair"])) {
-        $args["currencyPair"] = str_replace("/" , "%2F" , $args["currencyPair"]);
-      }
 
-      if($secure) $args["apikey"] = $this->apiKey;
+      $fields = null;
+      if(!empty($args)) {
+        ksort($args);
+        $fields     = !empty($args) ? http_build_query($args, '', '&') : "";
+      }
+      $sign       = strtoupper(hash_hmac('sha256', $fields, $this->apiSecret));
+
       $args["nonce"] = time();
-
-      $urlParams  = array();
-      foreach($args as $key => $val) {
-        $urlParams[]  = $key . "=" . $val;
-      }
-
       $uri  = $this->getBaseUrl() . $method;
 
-      $argsString = join("&" , $urlParams);
-      if(!empty($urlParams)) {
-          $uri  = $uri . "?" . $argsString;
+      $uri  .= !empty($fields) ? "?" . $fields : "";
+      $ch   = curl_init($uri);
+
+      if($secure) {
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+          'API-key: '.$this->apiKey,
+          'Sign: '.$sign
+        ));
       }
-
-      $sign = $secure == true ? hash_hmac('sha512',$uri,$this->apiSecret) : null;
-
-      $uri = trim(preg_replace('/\s+/', '', $uri));
-
-      $ch = curl_init($uri);
-      if($secure) curl_setopt($ch, CURLOPT_HTTPHEADER, array('apisign:'.$sign));
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       $execResult = curl_exec($ch);
 
@@ -78,6 +73,11 @@
       }
       return false;
 
+    }
+
+    public function getMyTrades($args = null) {
+      // /exchange/trades
+      return $this->getErrorReturn("not implemented yet!");
     }
 
     public function getMarketPair($market = "" , $currency = "") {
@@ -159,7 +159,16 @@
 
     // get balance
     public function getBalance($args  = null) {
-      return $this->getErrorReturn("not implemented yet!");
+      if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
+      $method = "payment/balance";
+      return $this->send($method , $args);
+    }
+
+    // get balance
+    public function getBalances($args  = null) {
+      //if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
+      $method = "payment/balances";
+      return $this->send($method , $args);
     }
 
     // place buy order
@@ -174,11 +183,29 @@
 
     // get open orders
     public function getOrders($args = null) {
-      return $this->getErrorReturn("not implemented yet!");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+        unset($args["_market"]);
+        unset($args["_currency"]);
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+
+      $method = "exchange/client_orders";
+      $args["currencyPair"] = $args["market"];
+
+      $resultOBJ  = $this->send( $method, $args);
+
+      if($resultOBJ["success"]) {
+        $result = $resultOBJ["result"];
+        return $result;
+      } else {
+        return $resultOBJ;
+      }
     }
 
     // get order
     public function getOrder($args = null) {
+      // /exchange/order
       return $this->getErrorReturn("not implemented yet!");
     }
 
