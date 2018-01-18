@@ -13,6 +13,7 @@ Bittrex Documentation
 ----
 Bittrex API documentation: https://bittrex.com/Home/Api
 
+
 Prerequisite
 ----
 * PHP 5.3.x
@@ -27,31 +28,42 @@ Config.inc.php
 
 Public API functions
 ----
-* getMarkets()
-* getCurrencies()
-* getTicker()
-* getMarketSummary()
-* getOrderbook()
-* getMarketHistory()
-* getMarketSummaries()
+
+| Endpoint uri | Api function | Parameters | Remarks |
+| --- | --- | --- | --- |
+| public/getmarkets | getMarkets() |  |  |
+| public/getcurrencies | getCurrencies() |  |  |
+| public/getmarketsummary | getTicker() |  |  |
+| public/getmarketsummary | getMarketSummary() |  |  |
+| public/getorderbook | getOrderbook() |  |  |
+| public/getmarkethistory | getMarketHistory() |  |  |
+| public/getmarketsummaries | getMarketSummaries() |  |  |
+
 
 Market API functions
 ----
-* buyLimit()
-* sell()
-* cancel()
-* getOrders()
+
+| Endpoint uri | Api function | Parameters | Remarks |
+| --- | --- | --- | --- |
+| market/buylimit | buy() |  |  |
+| market/selllimit | sell() |  |  |
+| market/cancel | cancel() |  |  |
+| market/getopenorders | getOrders() |  |  |
+
 
 Account API functions
 ----
-* getBalances()
-* getBalance()
-* getDepositAddress()
-* withdraw()
-* getOrder()
-* getOrderHistory()
-* getWithdrawalHistory()
-* getDepositHistory()
+
+| Endpoint uri | Api function | Parameters | Remarks |
+| --- | --- | --- | --- |
+| account/getbalances | getBalances() |  |  |
+| account/getbalance | getBalance() |  |  |
+| account/getdepositaddress | getDepositAddress() |  |  |
+| account/withdraw | withdraw() |  |  |
+| account/getorder | getOrder() |  |  |
+| account/getorderhistory | getOrderHistory() |  |  |
+| account/getwithdrawalhistory | getWithdrawalHistory() |  |  |
+| account/getdeposithistory | getDepositHistory() |  |  |
 
 Example
 ----
