@@ -33,3 +33,9 @@ Example
 $exchange  = new _ExchangeApi($apiKey , $apiSecret );
 $result = $exchange->getBalance(array("currency" => "BTC"));
 ```
+
+Public API functions
+----
+
+Private API functions
+----
