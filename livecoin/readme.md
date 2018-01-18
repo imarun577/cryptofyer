@@ -35,3 +35,23 @@ Example
 $liveCoin  = new LiveCoinApi($apiKey , $apiSecret );
 $result = $liveCoin->getBalance(array("currency" => "BTC"));
 ```
+
+Public API functions
+----
+- getRestrictions()
+- getCoinInfo()
+- getMaxbidMinask()
+- getTicker()
+- getCurrencyUrl()
+- getAllOrderbook()
+- getOrderbook()
+- getMarketHistory()
+
+Private API functions
+----
+- getBalance()
+- getBalances()
+- getOrders()
+- getOrder() -> not implemented yet!
+- buy() -> not implemented yet!
+- sell() -> not implemented yet!

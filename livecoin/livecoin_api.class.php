@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    0.3
+  * @version    0.4
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "3";
+    private $_version_minor  = "4";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -73,6 +73,11 @@
       }
       return false;
 
+    }
+
+    public function getMyTrades($args = null) {
+      // /exchange/trades
+      return $this->getErrorReturn("not implemented yet!");
     }
 
     public function getMarketPair($market = "" , $currency = "") {
@@ -200,6 +205,7 @@
 
     // get order
     public function getOrder($args = null) {
+      // /exchange/order
       return $this->getErrorReturn("not implemented yet!");
     }
 
