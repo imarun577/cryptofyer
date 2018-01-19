@@ -122,7 +122,7 @@ The function will resolve the market pair with the `getMarketPair()` function.
 
 Alias currency
 ----
-Over time, currency's change names. But the exchanges don't always update their tickers. In order to compensate, I created the ```php getCurrencyAlias() ``` function. The function will lookup the private array ```php $currencyAlias ``` . This is an associated array with the new currency name and aliased to the old currency name.
+Over time, currency's change names. But the exchanges don't always update their tickers. In order to compensate, I created the ``` getCurrencyAlias() ``` function. The function will lookup the private array ``` $currencyAlias ``` . This is an associated array with the new currency name and aliased to the old currency name.
 
 
 Unified tests
