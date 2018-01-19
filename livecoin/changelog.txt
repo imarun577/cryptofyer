@@ -1,3 +1,6 @@
+v0.6
+- updated send to check success
+
 v0.5
 - updated getTicker() with best_bid and best_ask
 

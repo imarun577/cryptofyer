@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    0.5
+  * @version    0.6
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "5";
+    private $_version_minor  = "6";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -63,7 +63,15 @@
       // try to convert json repsonse to assoc array
       if($obj = json_decode($execResult , true)) {
         if($obj !== null) {
-          return $this->getReturn(true,"",$obj);
+          if(isSet($obj["success"])) {
+            if($obj["success"] == true) {
+              return $this->getReturn(true,"",$obj);
+            } else {
+              return $this->getReturn(false,"",$obj);
+            }
+          } else {
+            return $this->getReturn(true,"",$obj);
+          }
         } else {
           return $this->getErrorReturn("error");
         }
