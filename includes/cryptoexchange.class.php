@@ -5,7 +5,7 @@
   * @package    cryptofyer
   * @class CryptoExchange
   * @author     Fransjo Leihitu
-  * @version    0.4
+  * @version    0.5
   *
   */
   class CryptoExchange {
@@ -16,8 +16,10 @@
     private $exchangeUrl   = null;
 
     private $version_major  = "0";
-    private $version_minor  = "4";
+    private $version_minor  = "5";
     private $version  = "";
+
+    private $currencyAlias  = array();
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -74,6 +76,16 @@
       );
     }
 
+    public function setCurrencyAlias($aliases = null) {
+      $this->currencyAlias  = $aliases;
+    }
+
+    public function getCurrencyAlias($currency = null) {
+      if($currency == null) return "";
+      if($this->currencyAlias == null) return $currency;
+      if(isSet($this->currencyAlias[$currency])) return $this->currencyAlias[$currency];
+      return $currency;
+    }
 
   }
 ?>
