@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BinanceApi
   * @author     Fransjo Leihitu
-  * @version    0.2
+  * @version    0.3
   *
   * API Documentation :
   */
@@ -19,7 +19,11 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "2";
+    private $_version_minor  = "3";
+
+    private $currencyAlias  = array(
+      "ETHOS" => "BQX"
+    );
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -28,6 +32,7 @@
 
         parent::setVersion($this->_version_major , $this->_version_minor);
         parent::setBaseUrl($this->exchangeUrl . "/");
+        parent::setCurrencyAlias($this->currencyAlias);
     }
 
     private function send($method = null , $args = array() , $secure = true) {
