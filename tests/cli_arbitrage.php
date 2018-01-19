@@ -48,63 +48,67 @@ $data = array(
 foreach($config as $key=>$value) {
   if(isSet($exchangesInstances[$key])) {
 
-    $debug  = false;
-    if($key == "livecoin") {
-      $debug  = true;
-    }
+    fwrite(STDOUT, " \n");
+    fwrite(STDOUT, "Querying $key : ");
 
     $exchange = $exchangesInstances[$key];
 
     $result = $exchange->getTicker(array("_market" => $_market , "_currency" => $_currency));
 
-    if($debug) {
-      debug($result);
-    }
-
     if($result != null && isSet($result["success"]) && $result["success"]==true) {
 
-      $value  = number_format($result["result"]["Ask"], 8, '.', '');
+      fwrite(STDOUT, "FOUND\n");
 
-      if($debug) {
-        debug($value);
-      }
 
+      $ask  = number_format($result["result"]["Ask"], 8, '.', '');
       if($data["Ask"] == null) {
+        fwrite(STDOUT, "new ASK : $ask\n");
         $data["Ask"]  = array(
           "exchange"  => $key,
-          "value"     => $value
+          "value"     => $ask
         );
       } else {
-        if($value <= number_format($data["Ask"]["value"], 8, '.', '')) {
+        $oldAsk = number_format($data["Ask"]["value"], 8, '.', '');
+        fwrite(STDOUT, "$key ASK : $ask\n");
+        fwrite(STDOUT, "current best ASK : $oldAsk\n");
+        if($ask > $oldAsk) {
           $data["Ask"]  = array(
             "exchange"  => $key,
-            "value"     => $value
+            "value"     => $ask
           );
+          fwrite(STDOUT, "new best ASK on $key : $ask\n");
         }
       }
 
-      $value  = number_format($result["result"]["Bid"], 8, '.', '');
+      $bid  = number_format($result["result"]["Bid"], 8, '.', '');
       if($data["Bid"] == null) {
+        fwrite(STDOUT, "new BID : $bid\n");
         $data["Bid"]  = array(
           "exchange"  => $key,
-          "value"     => $value
+          "value"     => $bid
         );
       } else {
-        if($value <= number_format($data["Bid"]["value"], 8, '.', '')) {
+        $oldBid = number_format($data["Bid"]["value"], 8, '.', '');
+        fwrite(STDOUT, "$key BID : $bid\n");
+        fwrite(STDOUT, "current best BID : $oldBid\n");
+        if($bid > $oldBid) {
           $data["Bid"]  = array(
             "exchange"  => $key,
-            "value"     => $value
+            "value"     => $bid
           );
+          fwrite(STDOUT, "new best BID on $key : $bid\n");
         }
       }
     } else {
-      fwrite(STDOUT, "ERROR $key\n");
+      fwrite(STDOUT, "not found\n");
     }
 
   }
 }
 
 if($data["Ask"] != null && $data["Bid"] != null) {
+  fwrite(STDOUT, " \n");
+
   $delta  = 0;
   $exchange   =  $data['Ask']['exchange'];
   $delta = $value      =  $data['Ask']['value'];
