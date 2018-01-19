@@ -16,10 +16,11 @@
   $_currency  = "ETHOS";
   $market     = $exchange->getMarketPair($_market , $_currency);
 
-
+  /*
   echo "<h1>Version</h1>";
   $result = $exchange->getVersion();
   debug($result);
+  */
 
   /*
   echo "<h1>Get Balance on " . $_currency . "</h1>";
@@ -32,6 +33,7 @@
   $result = $exchange->getTicker(array("_market" => $_market , "_currency" => $_currency));
   debug($result);
 
+  /*
   echo "<h1>Currency Url " . $market . "</h1>";
   $result = $exchange->getCurrencyUrl(array("_market" => $_market , "_currency" => $_currency));
   debug($result);
@@ -40,4 +42,5 @@
   echo "<h1>Alias test for " . $_currency ."</h1>";
   $result = $exchange->getCurrencyAlias($_currency);
   debug($result);
+  */
 ?>
