@@ -13,7 +13,7 @@
   $exchange  = new BinanceApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
 
   $_market    = "BTC";
-  $_currency  = "BQX";
+  $_currency  = "ETHOS";
   $market     = $exchange->getMarketPair($_market , $_currency);
 
 
@@ -37,7 +37,7 @@
   debug($result);
 
 
-  echo "<h1>Alias test for ETHOS</h1>";
-  $result = $exchange->getCurrencyAlias("ETHOS");
+  echo "<h1>Alias test for " . $_currency ."</h1>";
+  $result = $exchange->getCurrencyAlias($_currency);
   debug($result);
 ?>

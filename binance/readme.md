@@ -1,7 +1,7 @@
-CryptoFyer Binance v0.2
+CryptoFyer Binance v0.3
 ==============
 
-PHP client api for Binance api v0.2
+PHP client api for Binance
 
 I am NOT associated, I repeat NOT associated to Binance. Please use at your OWN risk.
 

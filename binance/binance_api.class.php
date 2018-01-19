@@ -120,7 +120,7 @@
     }
 
     public function getMarketPair($market = "" , $currency = "") {
-      return strtoupper($currency . "" . $market);
+      return strtoupper($this->getCurrencyAlias($currency) . "" . $market);
     }
 
 
@@ -170,7 +170,7 @@
     // Get the exchange currency detail url
     public function getCurrencyUrl($args = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_currency"] . "_" . $args["_market"];
+        $args["market"] = $this->getCurrencyAlias($args["_currency"]) . "_" . $args["_market"];
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       return $this->currencyUrl . $args["market"];
