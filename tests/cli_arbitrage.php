@@ -23,8 +23,9 @@ if(empty($_market)) {
   fwrite(STDOUT, "Enter market: [$_market] > ");
   $marketSelection = fgets(STDIN);
   $marketSelection  = trim(preg_replace('/\s+/', '', $marketSelection));
-  $_market  = !empty($marketSelection) ? strtoupper($marketSelection) : $_market;
+  $_market  = !empty($marketSelection) ? $marketSelection : $_market;
 }
+$_market  = strtoupper($_market);
 fwrite(STDOUT, "Using market: $_market\n");
 
 
@@ -33,8 +34,9 @@ if(empty($_currency)) {
   fwrite(STDOUT, "Enter currency: [$_currency] > ");
   $currencySelection = fgets(STDIN);
   $currencySelection  = trim(preg_replace('/\s+/', '', $currencySelection));
-  $_currency  = !empty($currencySelection) ? strtoupper($currencySelection) : $_currency;
+  $_currency  = !empty($currencySelection) ? $currencySelection : $_currency;
 }
+$_currency  = strtoupper($_currency);
 fwrite(STDOUT, "Using currency: $_currency\n");
 fwrite(STDOUT, "Trying to find the exchange to sell and buy.\n");
 
