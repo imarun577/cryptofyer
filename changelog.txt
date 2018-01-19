@@ -1,3 +1,6 @@
+CryptoExchange v0.5
+- added setCurrencyAlias() function to set the currency aliasses
+
 CryptoExchange v0.4
 - added getCurrencyAlias() function to have a way to alias crypto currency's
 
