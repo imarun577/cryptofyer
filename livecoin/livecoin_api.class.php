@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    0.4
+  * @version    0.5
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "4";
+    private $_version_minor  = "5";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -155,8 +155,8 @@
           $result             = $resultOBJ["result"];
 
           $result["Last"]     = $result["last"];
-          $result["Bid"]      = $result["max_bid"];
-          $result["Ask"]      = $result["min_ask"];
+          $result["Bid"]      = $result["best_bid"];
+          $result["Ask"]      = $result["best_ask"];
           $result["_raw"]     = $resultOBJ["result"];
 
           return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result);
