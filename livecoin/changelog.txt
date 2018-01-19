@@ -1,3 +1,6 @@
+v0.5
+- updated getTicker() with best_bid and best_ask
+
 v0.4
 - updated getTicker()
 
