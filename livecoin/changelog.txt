@@ -1,3 +1,6 @@
+v0.4
+- updated getTicker()
+
 v0.3
 - altered send() function
 - implemented getBalance()
@@ -14,8 +17,6 @@ v0.2
 - implemented getOrderbook()
 - implemented getMarketHistory()
 - implemented public send()
-
-
 
 v0.1
 It's alive
