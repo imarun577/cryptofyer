@@ -1,24 +1,23 @@
-CryptoFyer Exchange v0.1
+CryptoFyer Binance v0.2
 ==============
 
-PHP client api for Exchange
+PHP client api for Binance api v0.2
 
-I am NOT associated, I repeat NOT associated to Exchange. Please use at your OWN risk.
+I am NOT associated, I repeat NOT associated to Binance. Please use at your OWN risk.
 
 Want to help me? You can tip me :)
 * BTC: 1B27qUNVjKSMwfnQ2oq9viDY1hE3JY6XmQ
 
 
-Exchange Documentation
+Binance Documentation
 ----
-Exchange API documentation:
-
+Binance API documentation: https://github.com/binance-exchange/binance-official-api-docs
 
 Prerequisite
 ----
 * PHP 5.3.x
 * Curl
-* Valid api token at Exchange
+* Valid api token at Binance
 
 
 Config.inc.php
@@ -31,21 +30,17 @@ Config.inc.php
 Example
 ----
 ```php
-$exchange  = new _ExchangeApi($apiKey , $apiSecret );
-$result = $exchange->getBalance(array("currency" => "BTC"));
+$binance  = new BinanceApi($apiKey , $apiSecret );
+$result = $binance->getBalance(array("currency" => "BTC"));
 ```
 
 Public API functions
 ----
-
 | Endpoint uri | Api function | Parameters | Remarks |
 | --- | --- | --- | --- |
-|  |  |  |  |
-
+| api/v3/ticker/price | getTicker() |  |  |
 
 Private API functions
 ----
-
 | Endpoint uri | Api function | Parameters | Remarks |
 | --- | --- | --- | --- |
-|  |  |  |  |

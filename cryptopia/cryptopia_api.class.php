@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.18
+  * @version    0.19
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "18";
+    private $_version_minor  = "19";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -342,11 +342,12 @@
       $args["market"]=strtoupper(str_replace("-","_",$args["market"]));
       $args["market"]=strtoupper(str_replace("/","_",$args["market"]));
 
-      $count  = isSet($args["count"]) ? "/" . $args["count"] : "";
-      $method = "GetTradeHistory/".$args["market"].$count;
-      unset($args["market"]);
+      //$count  = isSet($args["count"]) ? "/" . $args["count"] : "";
+      //$method = "GetTradeHistory/".$args["market"].$count;
+      //unset($args["market"]);
+      $method = "GetTradeHistory";
 
-      return $this->send($method, $args , false);
+      return $this->send($method, $args , true);
     }
 
     public function getMarketHistory($args = null) {
