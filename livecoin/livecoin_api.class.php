@@ -150,8 +150,20 @@
       $resultOBJ  = $this->send( $method, $args, false);
 
       if($resultOBJ["success"]) {
-        $result = $resultOBJ["result"];
-        return $result;
+
+        if(isSet($resultOBJ["result"]) && !empty($resultOBJ["result"])) {
+          $result             = $resultOBJ["result"];
+
+          $result["Last"]     = $result["last"];
+          $result["Bid"]      = $result["max_bid"];
+          $result["Ask"]      = $result["min_ask"];
+          $result["_raw"]     = $resultOBJ["result"];
+
+          return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result);
+
+        } else {
+          return $resultOBJ;
+        }
       } else {
         return $resultOBJ;
       }
