@@ -1,4 +1,4 @@
-CryptoFyer Cryptopia v0.18
+CryptoFyer Cryptopia v0.19
 ==============
 
 PHP client api for Cryptopia
@@ -12,6 +12,7 @@ Want to help me? You can tip me :)
 Cryptopia Documentation
 ----
 * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
+
 * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
 
 Prerequisite
@@ -34,3 +35,29 @@ Example
 $cryptopia  = new CryptopiaApi($apiKey , $apiSecret );
 $result = $cryptopia->getBalance(array("currency" => "BTC"));
 ```
+
+Public API functions
+----
+
+| Endpoint uri | Api function | Parameters | Remarks |
+| --- | --- | --- | --- |
+| GetMarketOrders | getOrderbook() |  |  |
+| GetMarketHistory | getMarketHistory() |  |  |
+| GetMarkets | getMarkets() |  |  |
+| GetTradePairs | getTradePairs() |  |  |
+
+Private API functions
+----
+
+| Endpoint uri | Api function | Parameters | Remarks |
+| --- | --- | --- | --- |
+| GetDepositAddress | getDepositAddress() |  |  |
+|  | getBalances() |  |  |
+| GetBalance | getBalance() |  |  |
+|  | getOrder() |  |  |
+| GetOpenOrders | getOrders() |  |  |
+| CancelTrade | cancel() |  |  |
+| SubmitTrade | buy() |  |  |
+| SubmitTrade | sell() |  |  |
+| GetTransactions | getTransactions() |  |  |
+| GetTradeHistory | getTradeHistory() |  |  |
