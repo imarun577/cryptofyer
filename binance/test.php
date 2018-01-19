@@ -35,7 +35,7 @@
   echo "<h1>Currency Url " . $market . "</h1>";
   $result = $exchange->getCurrencyUrl(array("_market" => $_market , "_currency" => $_currency));
   debug($result);
-  
+
 
   echo "<h1>Alias test for ETHOS</h1>";
   $result = $exchange->getCurrencyAlias("ETHOS");
