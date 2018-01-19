@@ -5,7 +5,7 @@
   * @package    cryptofyer
   * @class CryptoExchange
   * @author     Fransjo Leihitu
-  * @version    0.4
+  * @version    0.5
   *
   */
   class CryptoExchange {
@@ -74,6 +74,10 @@
           "message" => $message,
           "result"    => $result
       );
+    }
+
+    public function setCurrencyAlias($aliases = null) {
+      $this->currencyAlias  = $aliases;
     }
 
     public function getCurrencyAlias($currency = null) {
