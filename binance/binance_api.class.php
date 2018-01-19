@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BinanceApi
   * @author     Fransjo Leihitu
-  * @version    0.3
+  * @version    0.4
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "3";
+    private $_version_minor  = "4";
 
     private $currencyAlias  = array(
       "ETHOS" => "BQX"
@@ -124,6 +124,32 @@
     }
 
 
+    public function getOrderbookTicker($args = null) {
+      // /api/v3/ticker/price
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+
+      $resultOBJ  = $this->send("/api/v3/ticker/bookTicker" , $args, false);
+
+      if($resultOBJ["success"]) {
+        if(isSet($resultOBJ["result"]) && !empty($resultOBJ["result"])) {
+          $result             = $resultOBJ["result"];
+          $result["Bid"]      = $result["bidPrice"];
+          $result["Ask"]      = $result["askPrice"];
+          $result["_raw"]      = $resultOBJ["result"];
+
+          return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result);
+        } else {
+          return $resultOBJ;
+        }
+      } else {
+        return $resultOBJ;
+      }
+    }
+
+
     // get ticket information
     public function getTicker($args  = null) {
       // /api/v3/ticker/price
@@ -135,8 +161,22 @@
       $resultOBJ  = $this->send("api/v3/ticker/price" , $args, false);
 
       if($resultOBJ["success"]) {
-        $result = $resultOBJ["result"];
-        return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result);
+        if(isSet($resultOBJ["result"]) && !empty($resultOBJ["result"])) {
+          $result             = $resultOBJ["result"];
+
+          $orderbook  = $this->getOrderbookTicker($args);
+
+          $result["Last"]     = $result["price"];
+          $result["Bid"]      = $orderbook["result"]["Bid"];
+          $result["Ask"]      = $orderbook["result"]["Ask"];
+          $result["_raw"]      = $resultOBJ["result"];
+          $result["_raw"]["orderbook"]  =  $orderbook["result"]["_raw"];
+
+          return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result);
+
+        } else {
+          return $resultOBJ;
+        }
       } else {
         return $resultOBJ;
       }

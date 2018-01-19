@@ -1,4 +1,4 @@
-CryptoFyer Binance v0.3
+CryptoFyer Binance v0.4
 ==============
 
 PHP client api for Binance
@@ -39,6 +39,8 @@ Public API functions
 | Endpoint uri | Api function | Parameters | Remarks |
 | --- | --- | --- | --- |
 | api/v3/ticker/price | getTicker() |  |  |
+| /api/v3/ticker/bookTicker | getOrderbookTicker() |  |  |
+
 
 Private API functions
 ----
