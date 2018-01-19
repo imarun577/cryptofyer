@@ -1,4 +1,4 @@
-CryptoFyer 0.3
+CryptoFyer 0.4
 ==============
 
 A unified framework to connect to different Crypto Exchange websites.
@@ -19,7 +19,7 @@ Official Public API documentation: https://www.cryptopia.co.nz/Forum/Thread/255
 Official Private API documentation: https://www.cryptopia.co.nz/Forum/Thread/256
 
 * Coinexchange (https://www.coinexchange.io/)
-NOTE, Coinexchange only has public api. 
+NOTE, Coinexchange only has public api.
 
 
 API keys safety
@@ -119,6 +119,11 @@ $result = $exchange->getTicker(array("_market" => "BTC" , "_currency" => "ETH"))
 debug($result);
 ```
 The function will resolve the market pair with the `getMarketPair()` function.
+
+Alias currency
+----
+Over time, currency's change names. But the exchanges don't always update their tickers. In order to compensate, I created the ```php getCurrencyAlias() ``` function. The function will lookup the private array ```php $currencyAlias ``` . This is an associated array with the new currency name and aliased to the old currency name.
+
 
 Unified tests
 ----
