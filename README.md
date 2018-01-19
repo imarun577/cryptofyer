@@ -1,7 +1,7 @@
 CryptoFyer 0.5
 ==============
 
-A unified framework to connect to different Crypto Exchange websites.
+An unified framework to connect to different Crypto Exchange websites.
 
 I am NOT associated, I repeat NOT associated to any Exchange website. Please use at your OWN risk.
 
@@ -28,7 +28,7 @@ All the exchanges uses API keys. Each API key consists of a public and a private
 
 If you do suspect somebody has your api keys DELETE your api keys at once!!!
 
-Also, a lot of exchanges have the option to make you api keys more secure with the option to sell/buy/withdra option. So if you can have an api key with only read rights and no sell/buy/withdraw right. But that depends on the exchange.
+Also, a lot of exchanges have the option to make you api keys more secure with the option to sell/buy/withdraw option. So if you can have an api key with only read rights and no sell/buy/withdraw right. But that depends on the exchange.
 
 One more time: NEVER EXPOSE YOUR API KEYS TO ANYBODY!!!!
 
