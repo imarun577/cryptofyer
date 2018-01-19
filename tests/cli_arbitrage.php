@@ -47,20 +47,35 @@ $data = array(
 
 foreach($config as $key=>$value) {
   if(isSet($exchangesInstances[$key])) {
+
+    $debug  = false;
+    if($key == "livecoin") {
+      $debug  = true;
+    }
+
     $exchange = $exchangesInstances[$key];
 
     $result = $exchange->getTicker(array("_market" => $_market , "_currency" => $_currency));
 
-    if(isSet($result["success"]) && $result["success"]==true) {
+    if($debug) {
+      debug($result);
+    }
+
+    if($result != null && isSet($result["success"]) && $result["success"]==true) {
 
       $value  = number_format($result["result"]["Ask"], 8, '.', '');
+
+      if($debug) {
+        debug($value);
+      }
+
       if($data["Ask"] == null) {
         $data["Ask"]  = array(
           "exchange"  => $key,
           "value"     => $value
         );
       } else {
-        if($value < $data["Ask"]["value"]) {
+        if($value <= number_format($data["Ask"]["value"], 8, '.', '')) {
           $data["Ask"]  = array(
             "exchange"  => $key,
             "value"     => $value
@@ -75,27 +90,34 @@ foreach($config as $key=>$value) {
           "value"     => $value
         );
       } else {
-        if($value < $data["Bid"]["value"]) {
+        if($value <= number_format($data["Bid"]["value"], 8, '.', '')) {
           $data["Bid"]  = array(
             "exchange"  => $key,
             "value"     => $value
           );
         }
       }
+    } else {
+      fwrite(STDOUT, "ERROR $key\n");
     }
 
   }
 }
 
 if($data["Ask"] != null && $data["Bid"] != null) {
+  $delta  = 0;
   $exchange   =  $data['Ask']['exchange'];
-  $value      =  $data['Ask']['value'];
-  fwrite(STDOUT, "Sell $_currency at exchange: $exchange -> $value\n");
+  $delta = $value      =  $data['Ask']['value'];
+  fwrite(STDOUT, "Sell at $exchange -> $value\n");
 
   $exchange   =  $data['Bid']['exchange'];
   $value      =  $data['Bid']['value'];
-  fwrite(STDOUT, "Buy $_currency at exchange: $exchange -> $value\n");
+  $delta  -= $value;
+  $delta  = number_format($delta, 8, '.', '');
+  fwrite(STDOUT, "Buy at $exchange -> $value\n");
+  fwrite(STDOUT, "Profit: $delta\n");
 } else {
   fwrite(STDOUT, "Failed to lookup\n");
 }
+fwrite(STDOUT, " \n");
 ?>
