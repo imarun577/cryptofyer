@@ -38,12 +38,18 @@ if(empty($_currency)) {
 }
 $_currency  = strtoupper($_currency);
 fwrite(STDOUT, "Using currency: $_currency\n");
-fwrite(STDOUT, "Trying to find the exchange to sell and buy.\n");
+fwrite(STDOUT, "\n");
+fwrite(STDOUT, "-------------------------- \n");
 
 $data = array(
   "Ask" => array(),
   "Bid" => array()
 );
+
+$bidHigh  = 0;
+$bidExhange = "";
+
+$askTMP = array();
 
 foreach($config as $key=>$value) {
   if(isSet($exchangesInstances[$key])) {
@@ -59,46 +65,19 @@ foreach($config as $key=>$value) {
 
       fwrite(STDOUT, "FOUND\n");
 
+      $bid  = number_format($result["result"]["Bid"], 8, '.', '');
+      fwrite(STDOUT, "BID : $bid\n");
+
+      if($bid > $bidHigh) {
+        $bidHigh  = $bid;
+        $bidExhange = $key;
+      }
 
       $ask  = number_format($result["result"]["Ask"], 8, '.', '');
-      if($data["Ask"] == null) {
-        fwrite(STDOUT, "new ASK : $ask\n");
-        $data["Ask"]  = array(
-          "exchange"  => $key,
-          "value"     => $ask
-        );
-      } else {
-        $oldAsk = number_format($data["Ask"]["value"], 8, '.', '');
-        fwrite(STDOUT, "$key ASK : $ask\n");
-        fwrite(STDOUT, "current best ASK : $oldAsk\n");
-        if($ask > $oldAsk) {
-          $data["Ask"]  = array(
-            "exchange"  => $key,
-            "value"     => $ask
-          );
-          fwrite(STDOUT, "new best ASK on $key : $ask\n");
-        }
-      }
+      fwrite(STDOUT, "ASK : $ask\n");
 
-      $bid  = number_format($result["result"]["Bid"], 8, '.', '');
-      if($data["Bid"] == null) {
-        fwrite(STDOUT, "new BID : $bid\n");
-        $data["Bid"]  = array(
-          "exchange"  => $key,
-          "value"     => $bid
-        );
-      } else {
-        $oldBid = number_format($data["Bid"]["value"], 8, '.', '');
-        fwrite(STDOUT, "$key BID : $bid\n");
-        fwrite(STDOUT, "current best BID : $oldBid\n");
-        if($bid > $oldBid) {
-          $data["Bid"]  = array(
-            "exchange"  => $key,
-            "value"     => $bid
-          );
-          fwrite(STDOUT, "new best BID on $key : $bid\n");
-        }
-      }
+      $askTMP[$key] = $ask;
+
     } else {
       fwrite(STDOUT, "not found\n");
     }
@@ -106,22 +85,36 @@ foreach($config as $key=>$value) {
   }
 }
 
-if($data["Ask"] != null && $data["Bid"] != null) {
-  fwrite(STDOUT, " \n");
+fwrite(STDOUT, "\n");
+fwrite(STDOUT, "-------------------------- \n");
+fwrite(STDOUT, "Sell : $bidHigh on $bidExhange\n");
 
-  $delta  = 0;
-  $exchange   =  $data['Ask']['exchange'];
-  $delta = $value      =  $data['Ask']['value'];
-  fwrite(STDOUT, "Sell at $exchange -> $value\n");
+unset($askTMP[$bidExhange]);
 
-  $exchange   =  $data['Bid']['exchange'];
-  $value      =  $data['Bid']['value'];
-  $delta  -= $value;
-  $delta  = number_format($delta, 8, '.', '');
-  fwrite(STDOUT, "Buy at $exchange -> $value\n");
-  fwrite(STDOUT, "Profit: $delta\n");
-} else {
-  fwrite(STDOUT, "Failed to lookup\n");
+$askLow = 0;
+$askExchange  = "";
+
+foreach($askTMP as $key=>$value) {
+  if($askLow == 0) {
+    $askLow = $value;
+    $askExchange  = $key;
+  } else {
+    if($value < $askLow) {
+      $askLow = $value;
+      $askExchange  = $key;
+    }
+  }
 }
+
+if($askLow > 0) {
+  fwrite(STDOUT, "Buy : $askLow on $askExchange\n");
+
+  $profit = number_format($bidHigh - $askLow, 8, '.', '');
+  fwrite(STDOUT, "Profit : $profit\n");
+  fwrite(STDOUT, "\n");
+} else {
+  fwrite(STDOUT, "Buy: not found\n");
+}
+
 fwrite(STDOUT, " \n");
 ?>
