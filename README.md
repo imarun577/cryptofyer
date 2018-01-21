@@ -138,6 +138,19 @@ Required parameters
 | price | long | price to sell |
 | amount | long | amount to sell |
 
+for example :
+
+```php
+$result = $exchange->buy(array("market" => "ETH-BTC" , "price" => 0.00001 , "amount" => 1));
+debug($result);
+```
+
+or you can use the (preferred) way using the ```_market``` and ```_currency``` method.
+
+```php
+$result = $exchange->buy(array("_market" => "BTC" , "_currency" => "ETH", "price" => 0.00001 , "amount" => 1));
+debug($result);
+```
 
 Unified tests
 ----
