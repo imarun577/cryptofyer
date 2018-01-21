@@ -148,7 +148,11 @@ debug($result);
 or you can use the (preferred) way using the ```_market``` and ```_currency``` method.
 
 ```php
-$result = $exchange->buy(array("_market" => "BTC" , "_currency" => "ETH", "price" => 0.00001 , "amount" => 1));
+$result = $exchange->buy(array(
+  "_market" => "BTC" ,
+  "_currency" => "ETH",
+  "price" => 0.00001 ,
+  "amount" => 1));
 debug($result);
 ```
 
