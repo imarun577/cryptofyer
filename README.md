@@ -128,6 +128,15 @@ Alias currency
 ----
 Over time, currency's change names. But the exchanges don't always update their tickers. In order to compensate, I created the ``` getCurrencyAlias() ``` function. The function will lookup the private array ``` $currencyAlias ``` . This is an associated array with the new currency name and aliased to the old currency name.
 
+Place a buy order
+----
+Required parameters
+| Name | Type | Remarks |
+| --- | --- | --- |
+| market | string | Marketpair |
+| price | long | price to sell |
+| amount | long | amount to sell |
+
 
 Unified tests
 ----
