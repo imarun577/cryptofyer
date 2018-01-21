@@ -100,14 +100,20 @@ Unified market arguments
 Some functions requires the market string literal as argument. For example Bittrex's ticker:
 
 ```php
-$result = $exchange->getTicker(array("market" => "BTC-ETH"));
+$result = $exchange->getTicker(array(
+  "market" => "BTC-ETH")
+);
+
 debug($result);
 ```
 
 or Cryptopia's ticker :
 
 ```php
-$result = $exchange->getTicker(array("market" => "ETH-BTC"));
+$result = $exchange->getTicker(array(
+  "market" => "ETH-BTC")
+);
+
 debug($result);
 ```
 
@@ -197,6 +203,39 @@ $result = $exchange->sell(array(
 
 debug($result);
 ```
+
+Cancel a order
+----
+Required parameters
+
+| Name | Type | Remarks |
+| --- | --- | --- |
+| market | string | Marketpair |
+| orderid | long | the unique orderid |
+
+for example :
+
+```php
+$result = $exchange->cancel(array(
+  "market" => "ETH-BTC" ,
+  "orderid" => 29011978
+);
+
+debug($result);
+```
+
+or you can use the (preferred) way using the ```_market``` and ```_currency``` method.
+
+```php
+$result = $exchange->cancel(array(
+  "_market" => "BTC" ,
+  "_currency" => "ETH",
+  "orderid" => 29011978
+);
+
+debug($result);
+```
+
 
 Unified tests
 ----
