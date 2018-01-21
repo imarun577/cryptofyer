@@ -13,6 +13,7 @@ Supported Exchanges
 
 | Exchange | Url | API documentation | Remarks |
 | --- | --- | --- | --- |
+| Binance | http://www.binance.com/ | https://github.com/binance-exchange/binance-official-api-docs | Only public calls |
 | Bittrex | https://www.bittrex.com/ | https://bittrex.com/home/api |  |
 | Cryptopia | https://www.cryptopia.co.nz/ | Public API : https://www.cryptopia.co.nz/Forum/Thread/255 & Private API : https://www.cryptopia.co.nz/Forum/Thread/256 |  |
 | Coinexchange | https://www.coinexchange.io/ | | Only public calls |
