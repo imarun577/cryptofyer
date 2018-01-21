@@ -131,6 +131,7 @@ Over time, currency's change names. But the exchanges don't always update their 
 Place a buy order
 ----
 Required parameters
+
 | Name | Type | Remarks |
 | --- | --- | --- |
 | market | string | Marketpair |
