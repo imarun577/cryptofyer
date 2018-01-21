@@ -1,4 +1,4 @@
-CryptoFyer LiveCoin v0.6
+CryptoFyer LiveCoin v0.7
 ==============
 
 PHP client api for LiveCoin
@@ -59,5 +59,6 @@ Private API functions
 | payment/balances | getBalances() |  |  |
 | exchange/client_orders | getOrders() |  |  |
 |  | getOrder() |  | not implemented yet! |
-|  | buy() |  | not implemented yet! |
-|  | sell() |  | not implemented yet! |
+| exchange/buylimit | buy() |  |  |
+| exchange/selllimit | sell() |  |  |
+| exchange/cancellimit | cancel() |  |  |
