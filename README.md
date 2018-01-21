@@ -152,8 +152,39 @@ $result = $exchange->buy(array(
   "_market" => "BTC" ,
   "_currency" => "ETH",
   "price" => 0.00001 ,
-  "amount" => 1));
-  
+  "amount" => 1)
+);
+
+debug($result);
+```
+
+Place a sell order
+----
+Required parameters
+
+| Name | Type | Remarks |
+| --- | --- | --- |
+| market | string | Marketpair |
+| price | long | price to sell |
+| amount | long | amount to sell |
+
+for example :
+
+```php
+$result = $exchange->sell(array("market" => "ETH-BTC" , "price" => 0.00001 , "amount" => 1));
+debug($result);
+```
+
+or you can use the (preferred) way using the ```_market``` and ```_currency``` method.
+
+```php
+$result = $exchange->sell(array(
+  "_market" => "BTC" ,
+  "_currency" => "ETH",
+  "price" => 0.00001 ,
+  "amount" => 1)
+);
+
 debug($result);
 ```
 
