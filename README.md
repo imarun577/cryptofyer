@@ -16,6 +16,7 @@ Supported Exchanges
 | Bittrex | https://www.bittrex.com/ | https://bittrex.com/home/api |  |
 | Cryptopia | https://www.cryptopia.co.nz/ | Public API : https://www.cryptopia.co.nz/Forum/Thread/255 & Private API : https://www.cryptopia.co.nz/Forum/Thread/256 |  |
 | Coinexchange | https://www.coinexchange.io/ | | Only public calls |
+| Livecoin | https://www.livecoin.net/ | https://www.livecoin.net/api?lang=en |  |
 
 
 
