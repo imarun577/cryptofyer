@@ -141,7 +141,12 @@ Required parameters
 for example :
 
 ```php
-$result = $exchange->buy(array("market" => "ETH-BTC" , "price" => 0.00001 , "amount" => 1));
+$result = $exchange->buy(array(
+  "market" => "ETH-BTC" ,
+  "price" => 0.00001 ,
+  "amount" => 1)
+);
+
 debug($result);
 ```
 
@@ -171,7 +176,12 @@ Required parameters
 for example :
 
 ```php
-$result = $exchange->sell(array("market" => "ETH-BTC" , "price" => 0.00001 , "amount" => 1));
+$result = $exchange->sell(array(
+  "market" => "ETH-BTC" ,
+  "price" => 0.00001 ,
+  "amount" => 1)
+);
+
 debug($result);
 ```
 
