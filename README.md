@@ -52,15 +52,19 @@ Each exchange sits in its own folder and there you'll find 'config.example.inc.p
 Required functions
 ----
 The exchange classes have some required functions to implement:
-* buy() -> place a buy order
-* sell() -> place a sell order
-* getOrders() -> get open orders
-* getOrder()  -> get order
-* cancel() -> cancel order
-* getTicker() -> get currency information
-* getCurrencyUrl() -> get the exchange currency detail url
-* getMarketHistory() -> get market history
-* getBalance() -> get balance
+
+
+| Function | Remarks |
+| --- | --- |
+| buy() | place a buy order |
+| sell() | place a sell order |
+| getOrders() | get open orders |
+| getOrder() | get order |
+| cancel() | cancel order |
+| getTicker() | get currency information |
+| getCurrencyUrl() | get the exchange currency detail url |
+| getMarketHistory() | get market history |
+| getBalance() | get balance |
 
 Market/currency pair
 ----
