@@ -153,6 +153,7 @@ $result = $exchange->buy(array(
   "_currency" => "ETH",
   "price" => 0.00001 ,
   "amount" => 1));
+  
 debug($result);
 ```
 
