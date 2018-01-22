@@ -1,3 +1,6 @@
+v0.9
+- updated getOrders()
+
 v0.8
 - implemented getOrder()
 

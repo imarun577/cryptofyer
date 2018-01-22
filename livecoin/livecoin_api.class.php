@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    0.8
+  * @version    0.9
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "8";
+    private $_version_minor  = "9";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -291,14 +291,21 @@
         unset($args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      if(!isSet($args["openClosed"])) $args["openClosed"]  = "open";
 
       $method = "exchange/client_orders";
       $args["currencyPair"] = $args["market"];
 
-      $resultOBJ  = $this->send( $method, $args);
+      $resultOBJ  = $this->send( $method, $args , true);
 
       if($resultOBJ["success"]) {
-        return $result;
+        $result = array();
+        foreach($resultOBJ["result"]["data"] as $item) {
+          $item["orderid"]  = $item["id"];
+          $result[] = $item;
+        }
+        $resultOBJ["result"]  = $result;
+        return $resultOBJ;
       } else {
         return $resultOBJ;
       }
