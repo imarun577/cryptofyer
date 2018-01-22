@@ -7,6 +7,7 @@ include("../bittrex/bittrex_api.class.php");
 include("../cryptopia/cryptopia_api.class.php");
 include("../coinexchange/coinexchange_api.class.php");
 include("../livecoin/livecoin_api.class.php");
+include("../binance/binance_api.class.php");
 
 // exchanges configs
 include("../bittrex/config.inc.php");

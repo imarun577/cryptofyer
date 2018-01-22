@@ -1,7 +1,7 @@
 CryptoFyer 0.5
 ==============
 
-A unified framework to connect to different Crypto Exchange websites.
+An unified framework to connect to different Crypto Exchange websites.
 
 I am NOT associated, I repeat NOT associated to any Exchange website. Please use at your OWN risk.
 
@@ -10,16 +10,15 @@ Want to help me? You can tip me :)
 
 Supported Exchanges
 ----
-* Bittrex (https://www.bittrex.com/)
-Official API documentation: https://bittrex.com/home/api
 
-* Cryptopia (https://www.cryptopia.co.nz/)
-Official Public API documentation: https://www.cryptopia.co.nz/Forum/Thread/255
+| Exchange | Url | API documentation | Remarks |
+| --- | --- | --- | --- |
+| Binance | http://www.binance.com/ | https://github.com/binance-exchange/binance-official-api-docs | Only public calls |
+| Bittrex | https://www.bittrex.com/ | https://bittrex.com/home/api |  |
+| Cryptopia | https://www.cryptopia.co.nz/ | Public API : https://www.cryptopia.co.nz/Forum/Thread/255 & Private API : https://www.cryptopia.co.nz/Forum/Thread/256 |  |
+| Coinexchange | https://www.coinexchange.io/ | | Only public calls |
+| Livecoin | https://www.livecoin.net/ | https://www.livecoin.net/api?lang=en |  |
 
-Official Private API documentation: https://www.cryptopia.co.nz/Forum/Thread/256
-
-* Coinexchange (https://www.coinexchange.io/)
-NOTE, Coinexchange only has public api.
 
 
 API keys safety
@@ -28,7 +27,7 @@ All the exchanges uses API keys. Each API key consists of a public and a private
 
 If you do suspect somebody has your api keys DELETE your api keys at once!!!
 
-Also, a lot of exchanges have the option to make you api keys more secure with the option to sell/buy/withdra option. So if you can have an api key with only read rights and no sell/buy/withdraw right. But that depends on the exchange.
+Also, a lot of exchanges have the option to make you api keys more secure with the option to sell/buy/withdraw option. So if you can have an api key with only read rights and no sell/buy/withdraw right. But that depends on the exchange.
 
 One more time: NEVER EXPOSE YOUR API KEYS TO ANYBODY!!!!
 
@@ -52,15 +51,19 @@ Each exchange sits in its own folder and there you'll find 'config.example.inc.p
 Required functions
 ----
 The exchange classes have some required functions to implement:
-* buy() -> place a buy order
-* sell() -> place a sell order
-* getOrders() -> get open orders
-* getOrder()  -> get order
-* cancel() -> cancel order
-* getTicker() -> get currency information
-* getCurrencyUrl() -> get the exchange currency detail url
-* getMarketHistory() -> get market history
-* getBalance() -> get balance
+
+
+| Function | Remarks |
+| --- | --- |
+| buy() | place a buy order |
+| sell() | place a sell order |
+| getOrders() | get open orders |
+| getOrder() | get order |
+| cancel() | cancel order |
+| getTicker() | get currency information |
+| getCurrencyUrl() | get the exchange currency detail url |
+| getMarketHistory() | get market history |
+| getBalance() | get balance |
 
 Market/currency pair
 ----
@@ -96,14 +99,20 @@ Unified market arguments
 Some functions requires the market string literal as argument. For example Bittrex's ticker:
 
 ```php
-$result = $exchange->getTicker(array("market" => "BTC-ETH"));
+$result = $exchange->getTicker(array(
+  "market" => "BTC-ETH")
+);
+
 debug($result);
 ```
 
 or Cryptopia's ticker :
 
 ```php
-$result = $exchange->getTicker(array("market" => "ETH-BTC"));
+$result = $exchange->getTicker(array(
+  "market" => "ETH-BTC")
+);
+
 debug($result);
 ```
 
@@ -123,6 +132,108 @@ The function will resolve the market pair with the `getMarketPair()` function.
 Alias currency
 ----
 Over time, currency's change names. But the exchanges don't always update their tickers. In order to compensate, I created the ``` getCurrencyAlias() ``` function. The function will lookup the private array ``` $currencyAlias ``` . This is an associated array with the new currency name and aliased to the old currency name.
+
+Place a buy order
+----
+Required parameters
+
+| Name | Type | Remarks |
+| --- | --- | --- |
+| market | string | Marketpair |
+| price | long | price to sell |
+| amount | long | amount to sell |
+
+for example :
+
+```php
+$result = $exchange->buy(array(
+  "market" => "ETH-BTC" ,
+  "price" => 0.00001 ,
+  "amount" => 1)
+);
+
+debug($result);
+```
+
+or you can use the (preferred) way using the ```_market``` and ```_currency``` method.
+
+```php
+$result = $exchange->buy(array(
+  "_market" => "BTC" ,
+  "_currency" => "ETH",
+  "price" => 0.00001 ,
+  "amount" => 1)
+);
+
+debug($result);
+```
+
+Place a sell order
+----
+Required parameters
+
+| Name | Type | Remarks |
+| --- | --- | --- |
+| market | string | Marketpair |
+| price | long | price to sell |
+| amount | long | amount to sell |
+
+for example :
+
+```php
+$result = $exchange->sell(array(
+  "market" => "ETH-BTC" ,
+  "price" => 0.00001 ,
+  "amount" => 1)
+);
+
+debug($result);
+```
+
+or you can use the (preferred) way using the ```_market``` and ```_currency``` method.
+
+```php
+$result = $exchange->sell(array(
+  "_market" => "BTC" ,
+  "_currency" => "ETH",
+  "price" => 0.00001 ,
+  "amount" => 1)
+);
+
+debug($result);
+```
+
+Cancel a order
+----
+Required parameters
+
+| Name | Type | Remarks |
+| --- | --- | --- |
+| market | string | Marketpair |
+| orderid | long | the unique orderid |
+
+for example :
+
+```php
+$result = $exchange->cancel(array(
+  "market" => "ETH-BTC" ,
+  "orderid" => 29011978
+);
+
+debug($result);
+```
+
+or you can use the (preferred) way using the ```_market``` and ```_currency``` method.
+
+```php
+$result = $exchange->cancel(array(
+  "_market" => "BTC" ,
+  "_currency" => "ETH",
+  "orderid" => 29011978
+);
+
+debug($result);
+```
 
 
 Unified tests
