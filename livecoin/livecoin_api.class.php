@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    0.7
+  * @version    0.8
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "7";
+    private $_version_minor  = "8";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -298,7 +298,6 @@
       $resultOBJ  = $this->send( $method, $args);
 
       if($resultOBJ["success"]) {
-        $result = $resultOBJ["result"];
         return $result;
       } else {
         return $resultOBJ;
@@ -307,8 +306,16 @@
 
     // get order
     public function getOrder($args = null) {
-      // /exchange/order
-      return $this->getErrorReturn("not implemented yet!");
+      if(!isSet($args["orderid"])) return $this->getErrorReturn("required parameter: orderid");
+      $args["orderId"] = $args["orderid"];
+      unset($args["orderid"]);
+      $resultOBJ  = $this->send("exchange/order" , $args , true);
+
+      if($resultOBJ["success"] == true) {
+        return $resultOBJ;
+      } else {
+        return $resultOBJ;
+      }
     }
 
     // Get the exchange currency detail url
