@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    0.9
+  * @version    1.0
   *
   * API Documentation :
   */
@@ -18,8 +18,8 @@
     private $currencyUrl  = "https://www.livecoin.net/en/trade/index?currencyPair=";
 
     // class version
-    private $_version_major  = "0";
-    private $_version_minor  = "9";
+    private $_version_major  = "1";
+    private $_version_minor  = "0";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -74,7 +74,7 @@
             if($obj["success"] == true) {
               return $this->getReturn(true,"",$obj);
             } else {
-              return $this->getReturn(false,"",$obj);
+              return $this->getReturn(false,$obj["exception"],$obj);
             }
           } else {
             return $this->getReturn(true,"",$obj);
@@ -300,9 +300,11 @@
 
       if($resultOBJ["success"]) {
         $result = array();
-        foreach($resultOBJ["result"]["data"] as $item) {
-          $item["orderid"]  = $item["id"];
-          $result[] = $item;
+        if($resultOBJ["result"]["data"] != null) {
+          foreach($resultOBJ["result"]["data"] as $item) {
+            $item["orderid"]  = $item["id"];
+            $result[] = $item;
+          }
         }
         $resultOBJ["result"]  = $result;
         return $resultOBJ;
