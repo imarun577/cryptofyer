@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    0.8
+  * @version    1.0
   *
   * API Documentation :
   */
@@ -18,8 +18,8 @@
     private $currencyUrl  = "https://www.livecoin.net/en/trade/index?currencyPair=";
 
     // class version
-    private $_version_major  = "0";
-    private $_version_minor  = "8";
+    private $_version_major  = "1";
+    private $_version_minor  = "0";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -74,7 +74,7 @@
             if($obj["success"] == true) {
               return $this->getReturn(true,"",$obj);
             } else {
-              return $this->getReturn(false,"",$obj);
+              return $this->getReturn(false,$obj["exception"],$obj);
             }
           } else {
             return $this->getReturn(true,"",$obj);
@@ -291,14 +291,23 @@
         unset($args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      if(!isSet($args["openClosed"])) $args["openClosed"]  = "open";
 
       $method = "exchange/client_orders";
       $args["currencyPair"] = $args["market"];
 
-      $resultOBJ  = $this->send( $method, $args);
+      $resultOBJ  = $this->send( $method, $args , true);
 
       if($resultOBJ["success"]) {
-        return $result;
+        $result = array();
+        if($resultOBJ["result"]["data"] != null) {
+          foreach($resultOBJ["result"]["data"] as $item) {
+            $item["orderid"]  = $item["id"];
+            $result[] = $item;
+          }
+        }
+        $resultOBJ["result"]  = $result;
+        return $resultOBJ;
       } else {
         return $resultOBJ;
       }
