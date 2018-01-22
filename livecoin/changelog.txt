@@ -1,3 +1,6 @@
+v0.8
+- implemented getOrder()
+
 v0.7
 - implemented sell()
 - implemented buy()
