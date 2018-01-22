@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    CoinexchangeApi
   * @author     Fransjo Leihitu
-  * @version    0.5
+  * @version    0.6
   *
   * API Documentation : http://coinexchangeio.github.io/slate/
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "5";
+    private $_version_minor  = "6";
 
     private $_markets     = null;
     private $_currencies  = null;
@@ -154,11 +154,13 @@
       $resultOBJ = $this->send("getmarketsummary" , $args , false);
       if($resultOBJ["success"] == true) {
         $result = $resultOBJ["result"];
+        $raw  = $resultOBJ["result"];
         $result["Last"] = number_format($result["LastPrice"], 8, '.', '');
         $result["Bid"] = number_format($result["BidPrice"], 8, '.', '');
         $result["Ask"] = number_format($result["AskPrice"], 8, '.', '');
 
         $resultOBJ["result"]  = $result;
+        $resultOBJ["result"]["_raw"]  =$raw;
         return $resultOBJ;
       }
 

@@ -21,6 +21,8 @@
     private $_version_major  = "0";
     private $_version_minor  = "1";
 
+    private $currencyAlias  = array();
+
     public function __construct($apiKey = null , $apiSecret = null)
     {
         $this->apiKey     = $apiKey;
@@ -28,6 +30,7 @@
 
         parent::setVersion($this->_version_major , $this->_version_minor);
         parent::setBaseUrl($this->exchangeUrl . "v" . $this->apiVersion . "/");
+        parent::setCurrencyAlias($this->currencyAlias);
     }
 
 
