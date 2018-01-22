@@ -1,3 +1,9 @@
+v0.4
+- implemented getOrderbookTicker()
+
+v0.3
+- added currency alias
+
 v0.2
 - implemented public send()
 - implemented getTicker()
