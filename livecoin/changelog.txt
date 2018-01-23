@@ -1,3 +1,7 @@
+v1.1
+- updated getBalance()
+- updated getBalances()
+
 v1.0
 - updated send() with error message
 - added cli_console.php
