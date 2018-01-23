@@ -182,6 +182,84 @@ do {
       break;
     }
 
+    case 20 : {
+      $data = array(
+        "Ask" => array(),
+        "Bid" => array()
+      );
+
+      $bidHigh  = 0;
+      $bidExhange = "";
+
+      $askTMP = array();
+
+      foreach($config as $key=>$value) {
+        if(isSet($exchangesInstances[$key])) {
+
+          fwrite(STDOUT, " \n");
+          fwrite(STDOUT, "Querying $key : ");
+
+          $exchange1 = $exchangesInstances[$key];
+
+          $result = $exchange1->getTicker(array("_market" => $_market , "_currency" => $_currency));
+
+          if($result != null && isSet($result["success"]) && $result["success"]==true) {
+
+            fwrite(STDOUT, "FOUND\n");
+
+            $bid  = number_format($result["result"]["Bid"], 8, '.', '');
+            fwrite(STDOUT, "BID : $bid\n");
+
+            if($bid > $bidHigh) {
+              $bidHigh  = $bid;
+              $bidExhange = $key;
+            }
+
+            $ask  = number_format($result["result"]["Ask"], 8, '.', '');
+            fwrite(STDOUT, "ASK : $ask\n");
+
+            $askTMP[$key] = $ask;
+
+          } else {
+            fwrite(STDOUT, "not found\n");
+          }
+
+        }
+      }
+
+      fwrite(STDOUT, "\n");
+      fwrite(STDOUT, "-------------------------- \n");
+      fwrite(STDOUT, "Sell : $bidHigh on $bidExhange\n");
+
+      unset($askTMP[$bidExhange]);
+
+      $askLow = 0;
+      $askExchange  = "";
+
+      foreach($askTMP as $key=>$value) {
+        if($askLow == 0) {
+          $askLow = $value;
+          $askExchange  = $key;
+        } else {
+          if($value < $askLow) {
+            $askLow = $value;
+            $askExchange  = $key;
+          }
+        }
+      }
+
+      if($askLow > 0) {
+        fwrite(STDOUT, "Buy : $askLow on $askExchange\n");
+
+        $profit = number_format($bidHigh - $askLow, 8, '.', '');
+        fwrite(STDOUT, "Profit : $profit\n");
+        fwrite(STDOUT, "\n");
+      } else {
+        fwrite(STDOUT, "Buy: not found\n");
+      }
+      break;
+    } // end 20
+
     case 100 : {
       cls();
       break;
@@ -226,6 +304,7 @@ function listMenu() {
   fwrite(STDOUT, "[6] change market\n");
   fwrite(STDOUT, "[7] change currency\n");
   fwrite(STDOUT, "[10] change exchange\n");
+  fwrite(STDOUT, "[20] arbitrage check\n");
   fwrite(STDOUT, "[100] clear screen\n");
   fwrite(STDOUT, "\n");
 }
