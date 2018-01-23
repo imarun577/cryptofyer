@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    1.0
+  * @version    1.1
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "1";
-    private $_version_minor  = "0";
+    private $_version_minor  = "1";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -188,14 +188,48 @@
     public function getBalance($args  = null) {
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
       $method = "payment/balance";
-      return $this->send($method , $args);
+      $resultOBJ  = $this->send($method , $args);
+      if($resultOBJ["success"]) {
+        if(isSet($resultOBJ["result"])) {
+          $resultOBJ["result"]["Balance"] = $resultOBJ["result"]["value"];
+          $resultOBJ["result"]["Available"] = $resultOBJ["result"]["value"];
+        }
+      }
+      return $resultOBJ;
     }
 
     // get balance
     public function getBalances($args  = null) {
       //if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
       $method = "payment/balances";
-      return $this->send($method , $args);
+      $resultOBJ =  $this->send($method , $args);
+      if($resultOBJ["success"]) {
+        if(isSet($resultOBJ["result"]) && $resultOBJ["result"] != null) {
+          $items  = array();
+
+          $_items = array();
+          foreach($resultOBJ["result"] as $item) {
+              if(!isSet($_items[$item["currency"]])) {
+                $_items[$item["currency"]]  = array();
+              }
+              $_items[$item["currency"]][$item["type"]]       = $item["value"];
+              $_items[$item["currency"]][$item["currency"]]   = $item["currency"];
+          }
+          if(!empty($_items)) {
+            foreach($_items as $key=>$value) {
+              if($value["total"] > 0) {
+                $value["Balance"]   = $value["total"];
+                $value["Available"] = $value["available"];
+                $value["Pending"]   = 0;
+                $items[]  = $value;
+              }
+            }
+          }
+
+          $resultOBJ["result"]  = $items;
+        }
+      }
+      return $resultOBJ;
     }
 
     public function cancel($args = null) {
