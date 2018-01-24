@@ -8,6 +8,7 @@ include("../cryptopia/cryptopia_api.class.php");
 include("../coinexchange/coinexchange_api.class.php");
 include("../livecoin/livecoin_api.class.php");
 include("../binance/binance_api.class.php");
+include("../kucoin/kucoin_api.class.php");
 
 // exchanges configs
 include("../bittrex/config.inc.php");
@@ -15,13 +16,15 @@ include("../cryptopia/config.inc.php");
 include("../coinexchange/config.inc.php");
 include("../livecoin/config.inc.php");
 include("../binance/config.inc.php");
+include("../kucoin/config.inc.php");
 
 $exchangesClasses = array(
   "bittrex" => "BittrexApi" ,
   "cryptopia" => "CryptopiaApi",
   "coinexchange" => "CoinexchangeApi",
   "livecoin" => "LiveCoinApi",
-  "binance" => "BinanceApi"
+  "binance" => "BinanceApi",
+  "kucoin" => "KucoinApi"
 );
 $exchangesInstances = array();
 
