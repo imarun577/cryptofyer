@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BinanceApi
   * @author     Fransjo Leihitu
-  * @version    0.4
+  * @version    0.5
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "4";
+    private $_version_minor  = "5";
 
     private $currencyAlias  = array(
       "ETHOS" => "BQX"
@@ -67,7 +67,11 @@
       // try to convert json repsonse to assoc array
       if($obj = json_decode($execResult , true)) {
         if($obj !== null) {
-          return $this->getReturn(true,"",$obj);
+          if(!isSet($obj["code"])) {
+            return $this->getReturn(true,"",$obj);
+          } else {
+            return $this->getReturn(false,$obj["msg"],$obj);
+          }
         } else {
           return $this->getErrorReturn("error");
         }

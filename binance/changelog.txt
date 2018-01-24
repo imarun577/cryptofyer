@@ -1,3 +1,6 @@
+v0.5
+- better error handling send()
+
 v0.4
 - implemented getOrderbookTicker()
 
