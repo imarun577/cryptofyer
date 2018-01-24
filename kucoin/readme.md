@@ -1,4 +1,4 @@
-CryptoFyer Kucoin v0.1
+CryptoFyer Kucoin v0.2
 ==============
 
 PHP client api for Kucoin
@@ -40,7 +40,7 @@ Public API functions
 
 | Endpoint uri | Api function | Parameters | Remarks |
 | --- | --- | --- | --- |
-|  |  |  |  |
+| v1/open/tick | getTicker() |  |  |
 
 
 Private API functions
