@@ -1,0 +1,6 @@
+v0.2
+- implemented getTicker()
+- implemented public send()
+
+v0.1
+It's alive
