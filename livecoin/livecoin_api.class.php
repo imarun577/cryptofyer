@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    1.1
+  * @version    1.2
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "1";
-    private $_version_minor  = "1";
+    private $_version_minor  = "2";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -74,7 +74,9 @@
             if($obj["success"] == true) {
               return $this->getReturn(true,"",$obj);
             } else {
-              return $this->getReturn(false,$obj["exception"],$obj);
+              $err  = isSet($obj["exception"]) ? $obj["exception"] : "";
+              $err  = isSet($obj["errorMessage"]) ? $obj["errorMessage"] : $err;
+              return $this->getReturn(false,$err,$obj);
             }
           } else {
             return $this->getReturn(true,"",$obj);

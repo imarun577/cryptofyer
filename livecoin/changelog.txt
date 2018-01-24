@@ -1,3 +1,6 @@
+v1.2
+- better error handling with send()
+
 v1.1
 - updated getBalance()
 - updated getBalances()
