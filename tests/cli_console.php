@@ -193,11 +193,23 @@ do {
 
       $askTMP = array();
 
+      fwrite(STDOUT, "EXCHANGE\t|BID\t\t|ASK\t\t|\n");
+      fwrite(STDOUT, "-------------------------------------------------\n");
+
       foreach($config as $key=>$value) {
         if(isSet($exchangesInstances[$key])) {
 
-          fwrite(STDOUT, " \n");
-          fwrite(STDOUT, "Querying $key : ");
+          //fwrite(STDOUT, " \n");
+          //fwrite(STDOUT, "Querying $key : ");
+
+          fwrite(STDOUT, "$key");
+          $len  = strlen($key);
+          if(strlen($key)<=7) {
+              fwrite(STDOUT, "\t\t");
+          } else {
+            fwrite(STDOUT, "\t");
+          }
+          fwrite(STDOUT, "|");
 
           $exchange1 = $exchangesInstances[$key];
 
@@ -205,10 +217,9 @@ do {
 
           if($result != null && isSet($result["success"]) && $result["success"]==true) {
 
-            fwrite(STDOUT, "FOUND\n");
-
             $bid  = number_format($result["result"]["Bid"], 8, '.', '');
-            fwrite(STDOUT, "BID : $bid\n");
+            //fwrite(STDOUT, "BID : $bid\n");
+            fwrite(STDOUT, "$bid\t|");
 
             if($bid > $bidHigh) {
               $bidHigh  = $bid;
@@ -216,20 +227,19 @@ do {
             }
 
             $ask  = number_format($result["result"]["Ask"], 8, '.', '');
-            fwrite(STDOUT, "ASK : $ask\n");
+            fwrite(STDOUT, "$ask\t|");
 
             $askTMP[$key] = $ask;
 
           } else {
-            fwrite(STDOUT, "not found\n");
+            fwrite(STDOUT, "\t\t|\t\t|");
           }
-
+          fwrite(STDOUT, "\n");
         }
       }
-
+      fwrite(STDOUT, "-------------------------------------------------\n");
       fwrite(STDOUT, "\n");
-      fwrite(STDOUT, "-------------------------- \n");
-      fwrite(STDOUT, "Sell : $bidHigh on $bidExhange\n");
+      fwrite(STDOUT, "Sell\t: $bidHigh on $bidExhange\n");
 
       unset($askTMP[$bidExhange]);
 
@@ -249,13 +259,13 @@ do {
       }
 
       if($askLow > 0) {
-        fwrite(STDOUT, "Buy : $askLow on $askExchange\n");
+        fwrite(STDOUT, "Buy\t: $askLow on $askExchange\n");
 
         $profit = number_format($bidHigh - $askLow, 8, '.', '');
-        fwrite(STDOUT, "Profit : $profit\n");
+        fwrite(STDOUT, "Profit\t: $profit\n");
         fwrite(STDOUT, "\n");
       } else {
-        fwrite(STDOUT, "Buy: not found\n");
+        fwrite(STDOUT, "Buy\t: not found\n");
       }
       break;
     } // end 20
@@ -281,9 +291,9 @@ function getTicker($exchange,$market) {
       $last = number_format($tickerOBJ["result"]["Last"], 8, '.', '');
       $bid = number_format($tickerOBJ["result"]["Bid"], 8, '.', '');
       $ask = number_format($tickerOBJ["result"]["Ask"], 8, '.', '');
-      fwrite(STDOUT, "Last = $last\n");
-      fwrite(STDOUT, "Bid = $bid\n");
-      fwrite(STDOUT, "Ask = $ask\n");
+      fwrite(STDOUT, "Last\t: $last\n");
+      fwrite(STDOUT, "Bid\t: $bid\n");
+      fwrite(STDOUT, "Ask\t: $ask\n");
     } else {
       $error  = $tickerOBJ["message"];
       fwrite(STDOUT, "[ERROR] [API] $error\n");
@@ -294,18 +304,18 @@ function getTicker($exchange,$market) {
 
 function listMenu() {
   fwrite(STDOUT, "** Menu :\n");
-  fwrite(STDOUT, "[-1] quit\n");
-  fwrite(STDOUT, "[0] menu\n");
-  fwrite(STDOUT, "[1] get ticker information\n");
-  fwrite(STDOUT, "[2] sell units\n");
-  fwrite(STDOUT, "[3] buy units\n");
-  fwrite(STDOUT, "[4] get open orders\n");
-  fwrite(STDOUT, "[5] cancel orders\n");
-  fwrite(STDOUT, "[6] change market\n");
-  fwrite(STDOUT, "[7] change currency\n");
-  fwrite(STDOUT, "[10] change exchange\n");
-  fwrite(STDOUT, "[20] arbitrage check\n");
-  fwrite(STDOUT, "[100] clear screen\n");
+  fwrite(STDOUT, "[-1]\tquit\n");
+  fwrite(STDOUT, "[0]\tmenu\n");
+  fwrite(STDOUT, "[1]\tget ticker information\n");
+  fwrite(STDOUT, "[2]\tsell units\n");
+  fwrite(STDOUT, "[3]\tbuy units\n");
+  fwrite(STDOUT, "[4]\tget open orders\n");
+  fwrite(STDOUT, "[5]\tcancel orders\n");
+  fwrite(STDOUT, "[6]\tchange market\n");
+  fwrite(STDOUT, "[7]\tchange currency\n");
+  fwrite(STDOUT, "[10]\tchange exchange\n");
+  fwrite(STDOUT, "[20]\tarbitrage check\n");
+  fwrite(STDOUT, "[100]\tclear screen\n");
   fwrite(STDOUT, "\n");
 }
 ?>
