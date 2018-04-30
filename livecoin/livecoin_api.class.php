@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "1";
-    private $_version_minor  = "2";
+    private $_version_minor  = "3";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -403,7 +403,7 @@
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
 
       if(!isSet($args["groupByPrice"])) $args["groupByPrice"]  = true;
-      if(!isSet($args["depth"])) $args["depth"]  = -10;
+      if(!isSet($args["depth"])) $args["depth"]  = 10;
 
       $method = "exchange/order_book";
       $args["currencyPair"] = $args["market"];
@@ -411,7 +411,19 @@
       $resultOBJ  = $this->send( $method, $args, false);
 
       if($resultOBJ["success"]) {
-        $result = $resultOBJ["result"];
+
+        $result = array(
+          "success" => true,
+          "message" => "",
+          "result"  => array()
+        );
+
+        $result["result"]["Bid"]  = $resultOBJ["result"]["bids"][0][0];
+        $result["result"]["BidQty"]  = $resultOBJ["result"]["bids"][0][1];
+        $result["result"]["Ask"]  = $resultOBJ["result"]["asks"][0][0];
+        $result["result"]["AskQty"]  = $resultOBJ["result"]["asks"][0][1];
+
+        $result["result"]["_raw"] = $resultOBJ["result"];
         return $result;
       } else {
         return $resultOBJ;

@@ -13,14 +13,14 @@
   $exchange  = new CoinexchangeApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
 
   $_market    = "BTC";
-  $_currency  = "ETHOS";
+  $_currency  = "ETH";
   $market     = $exchange->getMarketPair($_market , $_currency);
 
-  /*
+
   echo "<h1>Version</h1>";
   $result = $exchange->getVersion();
   debug($result);
-  */
+
 
   $result = $exchange->getTicker(array("_market" => $_market , "_currency" => $_currency));
   debug($result);

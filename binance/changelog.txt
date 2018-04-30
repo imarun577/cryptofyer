@@ -1,3 +1,6 @@
+v0.6
+- Better normalizing getOrderbook()
+
 v0.5
 - better error handling send()
 

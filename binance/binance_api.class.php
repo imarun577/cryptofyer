@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "5";
+    private $_version_minor  = "6";
 
     private $currencyAlias  = array(
       "ETHOS" => "BQX"
@@ -127,7 +127,9 @@
       return strtoupper($this->getCurrencyAlias($currency) . "" . $market);
     }
 
-
+    public function getOrderbook($args = null) {
+      return $this->getOrderbookTicker($args);
+    }
     public function getOrderbookTicker($args = null) {
       // /api/v3/ticker/price
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
@@ -140,8 +142,13 @@
       if($resultOBJ["success"]) {
         if(isSet($resultOBJ["result"]) && !empty($resultOBJ["result"])) {
           $result             = $resultOBJ["result"];
+
           $result["Bid"]      = $result["bidPrice"];
+          $result["BidQty"]   = $result["bidQty"];
+
           $result["Ask"]      = $result["askPrice"];
+          $result["AskQty"]      = $result["askQty"];
+
           $result["_raw"]      = $resultOBJ["result"];
 
           return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result);

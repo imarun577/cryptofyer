@@ -101,7 +101,17 @@ foreach($config as $key=>$value) {
 fwrite(STDOUT, "-------------------------------------------------\n");
 fwrite(STDOUT, "\n");
 
-fwrite(STDOUT, "Sell\t: $bidHigh on $bidExhange\n");
+$qtyToSell= -1;
+if($resultOrderBookSell = $exchangesInstances[$bidExhange]->getOrderbook(
+  array("_market" => $_market , "_currency" => $_currency)
+)) {
+  if($resultOrderBookSell["result"]["BidQty"]) {
+    $qtyToSell  = $resultOrderBookSell["result"]["BidQty"];
+  }
+}
+
+
+fwrite(STDOUT, "Sell\t: $bidHigh (qty : $qtyToSell) on $bidExhange\n");
 
 unset($askTMP[$bidExhange]);
 
@@ -121,7 +131,21 @@ foreach($askTMP as $key=>$value) {
 }
 
 if($askLow > 0) {
-  fwrite(STDOUT, "Buy\t: $askLow on $askExchange\n");
+
+  $qtyToBuy = -1;
+  if($resultOrderBookBuy = $exchangesInstances[$askExchange]->getOrderbook(
+    array("_market" => $_market , "_currency" => $_currency)
+  )) {
+    if($resultOrderBookBuy["result"]["AskQty"]) {
+      $qtyToBuy  = $resultOrderBookBuy["result"]["AskQty"];
+    }
+  }
+
+  fwrite(STDOUT, "Buy\t: $askLow (qty : $qtyToBuy) on $askExchange\n");
+
+  $resultOrderBookBuy = $exchangesInstances[$askExchange]->getOrderbook(
+    array("_market" => $_market , "_currency" => $_currency)
+  );
 
   $profit = number_format($bidHigh - $askLow, 8, '.', '');
   fwrite(STDOUT, "Profit\t: $profit\n");
