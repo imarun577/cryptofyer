@@ -1,3 +1,6 @@
+v0.20
+- Better normalizing getOrderbook()
+
 v0.19
 - Bugfixed GetTradeHistory(). Call should have been private not public
 
