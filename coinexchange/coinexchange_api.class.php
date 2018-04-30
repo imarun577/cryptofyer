@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    CoinexchangeApi
   * @author     Fransjo Leihitu
-  * @version    0.6
+  * @version    0.7
   *
   * API Documentation : http://coinexchangeio.github.io/slate/
   */

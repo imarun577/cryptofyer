@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BinanceApi
   * @author     Fransjo Leihitu
-  * @version    0.5
+  * @version    0.6
   *
   * API Documentation :
   */

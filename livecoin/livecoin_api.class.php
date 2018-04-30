@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    1.2
+  * @version    1.3
   *
   * API Documentation :
   */
