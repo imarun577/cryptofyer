@@ -1,23 +1,24 @@
-CryptoFyer Binance v0.5
+CryptoFyer Kucoin v0.2
 ==============
 
-PHP client api for Binance
+PHP client api for Kucoin
 
-I am NOT associated, I repeat NOT associated to Binance. Please use at your OWN risk.
+I am NOT associated, I repeat NOT associated to Kucoin. Please use at your OWN risk.
 
 Want to help me? You can tip me :)
 * BTC: 1B27qUNVjKSMwfnQ2oq9viDY1hE3JY6XmQ
 
 
-Binance Documentation
+Kucoin Documentation
 ----
-Binance API documentation: https://github.com/binance-exchange/binance-official-api-docs
+Kucoin API documentation: https://kucoinapidocs.docs.apiary.io/
+
 
 Prerequisite
 ----
 * PHP 5.3.x
 * Curl
-* Valid api token at Binance
+* Valid api token at Kucoin
 
 
 Config.inc.php
@@ -30,19 +31,21 @@ Config.inc.php
 Example
 ----
 ```php
-$binance  = new BinanceApi($apiKey , $apiSecret );
-$result = $binance->getBalance(array("currency" => "BTC"));
+$Kucoin  = new _KucoinApi($apiKey , $apiSecret );
+$result = $Kucoin->getBalance(array("currency" => "BTC"));
 ```
 
 Public API functions
 ----
+
 | Endpoint uri | Api function | Parameters | Remarks |
 | --- | --- | --- | --- |
-| api/v3/ticker/price | getTicker() |  |  |
-| /api/v3/ticker/bookTicker | getOrderbookTicker() |  |  |
+| v1/open/tick | getTicker() |  |  |
 
 
 Private API functions
 ----
+
 | Endpoint uri | Api function | Parameters | Remarks |
 | --- | --- | --- | --- |
+|  |  |  |  |

@@ -13,7 +13,7 @@
   $exchange  = new BinanceApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
 
   $_market    = "BTC";
-  $_currency  = "ETHOS";
+  $_currency  = "ETH";
   $market     = $exchange->getMarketPair($_market , $_currency);
 
   /*

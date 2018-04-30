@@ -1,7 +1,7 @@
 <?php
   include("../includes/tools.inc.php");
   include("../includes/cryptoexchange.class.php");
-  include("bittrex_api.class.php");
+  include("exchange_api.class.php");
 
   include("config.inc.php");
 

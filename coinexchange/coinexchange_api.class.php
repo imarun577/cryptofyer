@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "6";
+    private $_version_minor  = "7";
 
     private $_markets     = null;
     private $_currencies  = null;
@@ -190,7 +190,20 @@
 
       $resultOBJ = $this->send("getorderbook" , $args , false);
       if($resultOBJ["success"] == true) {
-        /* TODO normalize ? */
+        $raw  = $resultOBJ["result"];
+
+        $resultOBJ["result"]  = array();
+        $resultOBJ["result"]["_raw"]  = $raw;
+
+        $resultOBJ["result"]["buy"] = $raw["BuyOrders"];
+        $resultOBJ["result"]["sell"] =$raw["SellOrders"];
+
+        $resultOBJ["result"]["Bid"] =  $raw["BuyOrders"][0]["Price"];
+        $resultOBJ["result"]["BidQty"] =  $raw["BuyOrders"][0]["Quantity"];
+
+        $resultOBJ["result"]["Ask"] =  $raw["SellOrders"][0]["Price"];
+        $resultOBJ["result"]["AskQty"] = $raw["SellOrders"][0]["Quantity"];
+
         return $resultOBJ;
       }
       return $resultOBJ;

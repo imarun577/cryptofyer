@@ -40,7 +40,8 @@ Public API functions
 
 | Endpoint uri | Api function | Parameters | Remarks |
 | --- | --- | --- | --- |
-|  |  |  |  |
+|  | getTicker() |  | Not ready yet |
+|  | getMarketHistory() |  | Not ready yet |
 
 
 Private API functions
@@ -48,4 +49,9 @@ Private API functions
 
 | Endpoint uri | Api function | Parameters | Remarks |
 | --- | --- | --- | --- |
-|  |  |  |  |
+|  | getBalance() |  | Not ready yet |
+|  | getOrders() |  | Not ready yet |
+|  | getOrder() |  | Not ready yet |
+|  | buy() |  | Not ready yet |
+|  | sell() |  | Not ready yet |
+|  | cancel() |  | Not ready yet |
