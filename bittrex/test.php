@@ -13,10 +13,10 @@
   $exchange  = new BittrexApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
 
   $_market    = "BTC";
-  $_currency  = "ADA";
+  $_currency  = "ETH";
   $market     = $exchange->getMarketPair($_market , $_currency);
 
-  /*
+
   echo "<h1>Version</h1>";
   $result = $exchange->getVersion();
   debug($result);
@@ -24,7 +24,7 @@
   echo "<h1>Get Balance on " . $_currency . "</h1>";
   $result = $exchange->getBalance(array("currency" => $_currency));
   debug($result);
-  */
+
 
   echo "<h1>Ticker " . $market . "</h1>";
   $result = $exchange->getTicker(array("_market" => $_market , "_currency" => $_currency));

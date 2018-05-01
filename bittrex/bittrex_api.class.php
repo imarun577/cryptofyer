@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BittrexApi
   * @author     Fransjo Leihitu
-  * @version    0.14
+  * @version    0.15
   *
   * API Documentation : https://bittrex.com/home/api
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "14";
+    private $_version_minor  = "15";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -123,7 +123,24 @@
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       if(!isSet($args["type"])) $args["type"] = "both";
 
-      return $this->send("public/getorderbook" , $args , false);
+      $resultOBJ  = $this->send("public/getorderbook" , $args , false);
+      if($resultOBJ["success"] == true) {
+
+        $raw  = $resultOBJ["result"];
+
+        $resultOBJ["result"]  = array();
+        $resultOBJ["result"]["_raw"]  = $raw;
+
+        $resultOBJ["result"]["buy"] = $raw["buy"];
+        $resultOBJ["result"]["sell"] =$raw["sell"];
+
+        $resultOBJ["result"]["Bid"] =  $raw["buy"][0]["Rate"];
+        $resultOBJ["result"]["BidQty"] =  $raw["buy"][0]["Quantity"];
+
+        $resultOBJ["result"]["Ask"] =  $raw["sell"][0]["Rate"];
+        $resultOBJ["result"]["AskQty"] = $raw["sell"][0]["Quantity"];
+      }
+      return $resultOBJ;
     }
 
     public function getMarketHistory($args = null) {
