@@ -1,3 +1,6 @@
+v0.3
+- implemented getOrderbook()
+
 v0.2
 - implemented getTicker()
 - implemented public send()

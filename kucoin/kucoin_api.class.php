@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    KucoinApi
   * @author     Fransjo Leihitu
-  * @version    0.2
+  * @version    0.3
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "2";
+    private $_version_minor  = "3";
 
     private $currencyAlias  = array();
 
@@ -165,6 +165,37 @@
     // Get market history
     public function getMarketHistory($args = null) {
       return $this->getErrorReturn("not implemented yet!");
+    }
+
+    public function getOrderbook($args = null) {
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+        unset($args["_market"]);
+        unset($args["_currency"]);
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      $args["symbol"] = $args["market"];
+      unset($args["market"]);
+
+      $resultOBJ  = $this->send("v1/open/orders" , $args, false);
+
+      if($resultOBJ["success"]) {
+        if(isSet($resultOBJ["result"]) && !empty($resultOBJ["result"])) {
+          $raw  = $resultOBJ["result"];
+          $resultOBJ["result"]  = array();
+          $resultOBJ["result"]["_raw"]  = $raw;
+
+          $resultOBJ["result"]["buy"]   = $raw["data"]["BUY"];
+          $resultOBJ["result"]["sell"]  = $raw["data"]["SELL"];
+
+          $resultOBJ["result"]["Bid"]     =  $raw["data"]["BUY"][0][1];
+          $resultOBJ["result"]["BidQty"]  =  $raw["data"]["BUY"][0][2];
+
+          $resultOBJ["result"]["Ask"]     = $raw["data"]["SELL"][0][1];
+          $resultOBJ["result"]["AskQty"]  = $raw["data"]["SELL"][0][2];
+        }
+      }
+      return $resultOBJ;
     }
 
 
