@@ -26,7 +26,7 @@ if(empty($_market)) {
   $_market  = !empty($marketSelection) ? $marketSelection : $_market;
 }
 $_market  = strtoupper($_market);
-fwrite(STDOUT, "Using market: $_market\n");
+fwrite(STDOUT, "Using market\t: $_market\n");
 
 
 if(empty($_currency)) {
@@ -37,9 +37,9 @@ if(empty($_currency)) {
   $_currency  = !empty($currencySelection) ? $currencySelection : $_currency;
 }
 $_currency  = strtoupper($_currency);
-fwrite(STDOUT, "Using currency: $_currency\n");
+fwrite(STDOUT, "Using currency\t: $_currency\n");
 fwrite(STDOUT, "\n");
-fwrite(STDOUT, "-------------------------- \n");
+//fwrite(STDOUT, "-------------------------- \n");
 
 $data = array(
   "Ask" => array(),
@@ -51,11 +51,23 @@ $bidExhange = "";
 
 $askTMP = array();
 
+fwrite(STDOUT, "EXCHANGE\t|BID\t\t|ASK\t\t|\n");
+fwrite(STDOUT, "-------------------------------------------------\n");
+
 foreach($config as $key=>$value) {
   if(isSet($exchangesInstances[$key])) {
 
-    fwrite(STDOUT, " \n");
-    fwrite(STDOUT, "Querying $key : ");
+    $key  = trim($key);
+
+    //fwrite(STDOUT, "Querying $key : ");
+    fwrite(STDOUT, "$key");
+    $len  = strlen($key);
+    if(strlen($key)<=7) {
+        fwrite(STDOUT, "\t\t");
+    } else {
+      fwrite(STDOUT, "\t");
+    }
+    fwrite(STDOUT, "|");
 
     $exchange = $exchangesInstances[$key];
 
@@ -63,10 +75,11 @@ foreach($config as $key=>$value) {
 
     if($result != null && isSet($result["success"]) && $result["success"]==true) {
 
-      fwrite(STDOUT, "FOUND\n");
+      //fwrite(STDOUT, "FOUND\n");
 
       $bid  = number_format($result["result"]["Bid"], 8, '.', '');
-      fwrite(STDOUT, "BID : $bid\n");
+      //fwrite(STDOUT, "BID : $bid\n");
+      fwrite(STDOUT, "$bid\t|");
 
       if($bid > $bidHigh) {
         $bidHigh  = $bid;
@@ -74,20 +87,31 @@ foreach($config as $key=>$value) {
       }
 
       $ask  = number_format($result["result"]["Ask"], 8, '.', '');
-      fwrite(STDOUT, "ASK : $ask\n");
+      //fwrite(STDOUT, "ASK : $ask\n");
+      fwrite(STDOUT, "$ask\t|");
 
       $askTMP[$key] = $ask;
 
     } else {
-      fwrite(STDOUT, "not found\n");
+      fwrite(STDOUT, "\t\t|\t\t|");
     }
+    fwrite(STDOUT, " \n");
+  }
+}
+fwrite(STDOUT, "-------------------------------------------------\n");
+fwrite(STDOUT, "\n");
 
+$qtyToSell= -1;
+if($resultOrderBookSell = $exchangesInstances[$bidExhange]->getOrderbook(
+  array("_market" => $_market , "_currency" => $_currency)
+)) {
+  if($resultOrderBookSell["result"]["BidQty"]) {
+    $qtyToSell  = $resultOrderBookSell["result"]["BidQty"];
   }
 }
 
-fwrite(STDOUT, "\n");
-fwrite(STDOUT, "-------------------------- \n");
-fwrite(STDOUT, "Sell : $bidHigh on $bidExhange\n");
+
+fwrite(STDOUT, "Sell\t: $bidHigh (qty : $qtyToSell) on $bidExhange\n");
 
 unset($askTMP[$bidExhange]);
 
@@ -107,10 +131,24 @@ foreach($askTMP as $key=>$value) {
 }
 
 if($askLow > 0) {
-  fwrite(STDOUT, "Buy : $askLow on $askExchange\n");
+
+  $qtyToBuy = -1;
+  if($resultOrderBookBuy = $exchangesInstances[$askExchange]->getOrderbook(
+    array("_market" => $_market , "_currency" => $_currency)
+  )) {
+    if($resultOrderBookBuy["result"]["AskQty"]) {
+      $qtyToBuy  = $resultOrderBookBuy["result"]["AskQty"];
+    }
+  }
+
+  fwrite(STDOUT, "Buy\t: $askLow (qty : $qtyToBuy) on $askExchange\n");
+
+  $resultOrderBookBuy = $exchangesInstances[$askExchange]->getOrderbook(
+    array("_market" => $_market , "_currency" => $_currency)
+  );
 
   $profit = number_format($bidHigh - $askLow, 8, '.', '');
-  fwrite(STDOUT, "Profit : $profit\n");
+  fwrite(STDOUT, "Profit\t: $profit\n");
   fwrite(STDOUT, "\n");
 } else {
   fwrite(STDOUT, "Buy: not found\n");

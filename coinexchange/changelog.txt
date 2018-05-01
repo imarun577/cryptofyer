@@ -1,3 +1,6 @@
+v0.7
+- Better normalizing getOrderbook()
+
 v0.6
 - update getTicker()
 

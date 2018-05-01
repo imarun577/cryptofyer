@@ -1,23 +1,24 @@
-CryptoFyer Coinexchange v0.7
+CryptoFyer Kucoin v0.2
 ==============
 
-PHP client api for Coinexchange
+PHP client api for Kucoin
 
-I am NOT associated, I repeat NOT associated to Coinexchange. Please use at your OWN risk.
+I am NOT associated, I repeat NOT associated to Kucoin. Please use at your OWN risk.
 
 Want to help me? You can tip me :)
 * BTC: 1B27qUNVjKSMwfnQ2oq9viDY1hE3JY6XmQ
 
 
-Exchange Documentation
+Kucoin Documentation
 ----
-Coinexchange API documentation: http://coinexchangeio.github.io/slate/
+Kucoin API documentation: https://kucoinapidocs.docs.apiary.io/
+
 
 Prerequisite
 ----
 * PHP 5.3.x
 * Curl
-* Valid api token at Coinexchange
+* Valid api token at Kucoin
 
 
 Config.inc.php
@@ -30,8 +31,8 @@ Config.inc.php
 Example
 ----
 ```php
-$exchange  = new CoinexchangeApi($apiKey , $apiSecret );
-$result = $exchange->getBalance(array("currency" => "BTC"));
+$Kucoin  = new _KucoinApi($apiKey , $apiSecret );
+$result = $Kucoin->getBalance(array("currency" => "BTC"));
 ```
 
 Public API functions
@@ -39,6 +40,7 @@ Public API functions
 
 | Endpoint uri | Api function | Parameters | Remarks |
 | --- | --- | --- | --- |
+| v1/open/tick | getTicker() |  |  |
 
 
 Private API functions
@@ -46,3 +48,4 @@ Private API functions
 
 | Endpoint uri | Api function | Parameters | Remarks |
 | --- | --- | --- | --- |
+|  |  |  |  |

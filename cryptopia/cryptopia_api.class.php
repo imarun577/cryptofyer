@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.19
+  * @version    0.20
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "19";
+    private $_version_minor  = "20";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -316,8 +316,25 @@
         unset($args["depth"]);
       }
 
-      $response = $this->send("GetMarketOrders/".$args["market"].$orderCount, null , false);
-      return $response;
+      $resultOBJ = $this->send("GetMarketOrders/".$args["market"].$orderCount, null , false);
+
+      if($resultOBJ["success"] == true) {
+        $raw  = $resultOBJ["result"];
+
+        $resultOBJ["result"]  = array();
+        $resultOBJ["result"]["_raw"]  = $raw;
+
+        $resultOBJ["result"]["buy"] = $raw["Buy"];
+        $resultOBJ["result"]["sell"] =$raw["Sell"];
+
+        $resultOBJ["result"]["Bid"] =  $raw["Buy"][0]["Price"];
+        $resultOBJ["result"]["BidQty"] =  $raw["Buy"][0]["Volume"];
+
+        $resultOBJ["result"]["Ask"] =  $raw["Sell"][0]["Price"];
+        $resultOBJ["result"]["AskQty"] = $raw["Sell"][0]["Volume"];
+      }
+
+      return $resultOBJ;
     }
 
     public function getMarketOrderGroups($args = null) {

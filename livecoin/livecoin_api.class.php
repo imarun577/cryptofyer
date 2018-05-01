@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    0.8
+  * @version    1.3
   *
   * API Documentation :
   */
@@ -18,8 +18,8 @@
     private $currencyUrl  = "https://www.livecoin.net/en/trade/index?currencyPair=";
 
     // class version
-    private $_version_major  = "0";
-    private $_version_minor  = "8";
+    private $_version_major  = "1";
+    private $_version_minor  = "3";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -74,7 +74,9 @@
             if($obj["success"] == true) {
               return $this->getReturn(true,"",$obj);
             } else {
-              return $this->getReturn(false,"",$obj);
+              $err  = isSet($obj["exception"]) ? $obj["exception"] : "";
+              $err  = isSet($obj["errorMessage"]) ? $obj["errorMessage"] : $err;
+              return $this->getReturn(false,$err,$obj);
             }
           } else {
             return $this->getReturn(true,"",$obj);
@@ -188,14 +190,48 @@
     public function getBalance($args  = null) {
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
       $method = "payment/balance";
-      return $this->send($method , $args);
+      $resultOBJ  = $this->send($method , $args);
+      if($resultOBJ["success"]) {
+        if(isSet($resultOBJ["result"])) {
+          $resultOBJ["result"]["Balance"] = $resultOBJ["result"]["value"];
+          $resultOBJ["result"]["Available"] = $resultOBJ["result"]["value"];
+        }
+      }
+      return $resultOBJ;
     }
 
     // get balance
     public function getBalances($args  = null) {
       //if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
       $method = "payment/balances";
-      return $this->send($method , $args);
+      $resultOBJ =  $this->send($method , $args);
+      if($resultOBJ["success"]) {
+        if(isSet($resultOBJ["result"]) && $resultOBJ["result"] != null) {
+          $items  = array();
+
+          $_items = array();
+          foreach($resultOBJ["result"] as $item) {
+              if(!isSet($_items[$item["currency"]])) {
+                $_items[$item["currency"]]  = array();
+              }
+              $_items[$item["currency"]][$item["type"]]       = $item["value"];
+              $_items[$item["currency"]][$item["currency"]]   = $item["currency"];
+          }
+          if(!empty($_items)) {
+            foreach($_items as $key=>$value) {
+              if($value["total"] > 0) {
+                $value["Balance"]   = $value["total"];
+                $value["Available"] = $value["available"];
+                $value["Pending"]   = 0;
+                $items[]  = $value;
+              }
+            }
+          }
+
+          $resultOBJ["result"]  = $items;
+        }
+      }
+      return $resultOBJ;
     }
 
     public function cancel($args = null) {
@@ -291,14 +327,23 @@
         unset($args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      if(!isSet($args["openClosed"])) $args["openClosed"]  = "open";
 
       $method = "exchange/client_orders";
       $args["currencyPair"] = $args["market"];
 
-      $resultOBJ  = $this->send( $method, $args);
+      $resultOBJ  = $this->send( $method, $args , true);
 
       if($resultOBJ["success"]) {
-        return $result;
+        $result = array();
+        if($resultOBJ["result"]["data"] != null) {
+          foreach($resultOBJ["result"]["data"] as $item) {
+            $item["orderid"]  = $item["id"];
+            $result[] = $item;
+          }
+        }
+        $resultOBJ["result"]  = $result;
+        return $resultOBJ;
       } else {
         return $resultOBJ;
       }
@@ -358,7 +403,7 @@
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
 
       if(!isSet($args["groupByPrice"])) $args["groupByPrice"]  = true;
-      if(!isSet($args["depth"])) $args["depth"]  = -10;
+      if(!isSet($args["depth"])) $args["depth"]  = 10;
 
       $method = "exchange/order_book";
       $args["currencyPair"] = $args["market"];
@@ -366,7 +411,19 @@
       $resultOBJ  = $this->send( $method, $args, false);
 
       if($resultOBJ["success"]) {
-        $result = $resultOBJ["result"];
+
+        $result = array(
+          "success" => true,
+          "message" => "",
+          "result"  => array()
+        );
+
+        $result["result"]["Bid"]  = $resultOBJ["result"]["bids"][0][0];
+        $result["result"]["BidQty"]  = $resultOBJ["result"]["bids"][0][1];
+        $result["result"]["Ask"]  = $resultOBJ["result"]["asks"][0][0];
+        $result["result"]["AskQty"]  = $resultOBJ["result"]["asks"][0][1];
+
+        $result["result"]["_raw"] = $resultOBJ["result"];
         return $result;
       } else {
         return $resultOBJ;

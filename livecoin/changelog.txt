@@ -1,3 +1,20 @@
+v1.3
+- Better normalizing getOrderbook()
+
+v1.2
+- better error handling with send()
+
+v1.1
+- updated getBalance()
+- updated getBalances()
+
+v1.0
+- updated send() with error message
+- added cli_console.php
+
+v0.9
+- updated getOrders()
+
 v0.8
 - implemented getOrder()
 

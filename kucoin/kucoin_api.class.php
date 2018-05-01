@@ -2,24 +2,24 @@
   /*
   *
   * @package    cryptofyer
-  * @class    _ExchangeApi
+  * @class    KucoinApi
   * @author     Fransjo Leihitu
-  * @version    0.1
+  * @version    0.2
   *
   * API Documentation :
   */
-  class _ExchangeApi extends CryptoExchange implements CryptoExchangeInterface {
+  class KucoinApi extends CryptoExchange implements CryptoExchangeInterface {
 
     // base exchange api url
-    private $exchangeUrl  = "";
+    private $exchangeUrl  = "https://api.kucoin.com/";
     private $apiVersion   = "";
 
     // base url for currency
-    private $currencyUrl  = "";
+    private $currencyUrl  = "https://www.kucoin.com/#/trade.pro/";
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "1";
+    private $_version_minor  = "2";
 
     private $currencyAlias  = array();
 
@@ -29,7 +29,7 @@
         $this->apiSecret  = $apiSecret;
 
         parent::setVersion($this->_version_major , $this->_version_minor);
-        parent::setBaseUrl($this->exchangeUrl . "v" . $this->apiVersion . "/");
+        parent::setBaseUrl($this->exchangeUrl . "/");
         parent::setCurrencyAlias($this->currencyAlias);
     }
 
@@ -50,13 +50,16 @@
       $uri  = $this->getBaseUrl() . $method;
       $uri  .= (!empty($fields) && $type == "GET") ? "?" . $fields : "";
 
+      //debug($uri , true);
+
       $ch   = curl_init($uri);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
       if($secure) {
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-          'API-key: '.$this->apiKey,
-          'Sign: '.$sign
+          'KC-API-KEY: '. $this->apiKey,
+          'KC-API-SIGNATURE: '. $sign,
+          'KC-API-NONCE: '. $args["nonce"]
         ));
       }
 
@@ -73,20 +76,55 @@
       // try to convert json repsonse to assoc array
       if($obj = json_decode($execResult , true)) {
         if($obj !== null) {
-          return $this->getReturn(true,"",$obj);
+          if(isSet($obj["success"])) {
+            if($obj["success"] == true) {
+              return $this->getReturn(true,"",$obj);
+            } else {
+              return $this->getReturn(false,$obj["msg"],$obj);
+            }
+          } else {
+            return $this->getReturn(true,"",$obj);
+          }
         } else {
-          return $this->getErrorReturn("server error");
+          return $this->getErrorReturn("error");
         }
+
       } else {
-        return $this->getErrorReturn($execResult);
+          return $this->getErrorReturn($execResult);
       }
-      return $this->getErrorReturn("unknown error");
+      return false;
+
     }
 
+    public function getMarketPair($market = "" , $currency = "") {
+      return strtoupper($currency . "-" . $market);
+    }
 
     // get ticket information
     public function getTicker($args  = null) {
-      return $this->getErrorReturn("not implemented yet!");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+        unset($args["_market"]);
+        unset($args["_currency"]);
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      $args["symbol"] = $args["market"];
+      unset($args["market"]);
+
+      $resultOBJ  = $this->send("v1/open/tick" , $args, false);
+      if($resultOBJ["success"]) {
+        if(isSet($resultOBJ["result"]) && !empty($resultOBJ["result"])) {
+          $result             = $resultOBJ["result"]["data"];
+
+          $result["Last"]     = $result["lastDealPrice"];
+          $result["Bid"]      = $result["buy"];
+          $result["Ask"]      = $result["sell"];
+          $result["_raw"]     = $resultOBJ["result"];
+
+          return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result);
+        }
+      }
+      return $resultOBJ;
     }
 
     // get balance
@@ -116,7 +154,12 @@
 
     // Get the exchange currency detail url
     public function getCurrencyUrl($args = null) {
-      return $this->getErrorReturn("not implemented yet!");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+
+      return $this->currencyUrl . $args["market"];
     }
 
     // Get market history

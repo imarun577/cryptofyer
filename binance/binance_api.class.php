@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BinanceApi
   * @author     Fransjo Leihitu
-  * @version    0.4
+  * @version    0.6
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "4";
+    private $_version_minor  = "6";
 
     private $currencyAlias  = array(
       "ETHOS" => "BQX"
@@ -67,7 +67,11 @@
       // try to convert json repsonse to assoc array
       if($obj = json_decode($execResult , true)) {
         if($obj !== null) {
-          return $this->getReturn(true,"",$obj);
+          if(!isSet($obj["code"])) {
+            return $this->getReturn(true,"",$obj);
+          } else {
+            return $this->getReturn(false,$obj["msg"],$obj);
+          }
         } else {
           return $this->getErrorReturn("error");
         }
@@ -123,7 +127,9 @@
       return strtoupper($this->getCurrencyAlias($currency) . "" . $market);
     }
 
-
+    public function getOrderbook($args = null) {
+      return $this->getOrderbookTicker($args);
+    }
     public function getOrderbookTicker($args = null) {
       // /api/v3/ticker/price
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
@@ -136,8 +142,13 @@
       if($resultOBJ["success"]) {
         if(isSet($resultOBJ["result"]) && !empty($resultOBJ["result"])) {
           $result             = $resultOBJ["result"];
+
           $result["Bid"]      = $result["bidPrice"];
+          $result["BidQty"]   = $result["bidQty"];
+
           $result["Ask"]      = $result["askPrice"];
+          $result["AskQty"]      = $result["askQty"];
+
           $result["_raw"]      = $resultOBJ["result"];
 
           return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result);
