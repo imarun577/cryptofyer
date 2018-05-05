@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    1.3
+  * @version    1.4
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "1";
-    private $_version_minor  = "3";
+    private $_version_minor  = "4";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -34,6 +34,8 @@
       if(empty($method)) return array("status" => false , "error" => "method was not defined!");
 
       if(isSet($args["market"])) unset($args["market"]);
+      if(isSet($args["_market"])) unset($args["_market"]);
+      if(isSet($args["_currency"])) unset($args["_currency"]);
 
       $fields = null;
       if(!empty($args)) {
@@ -188,6 +190,10 @@
 
     // get balance
     public function getBalance($args  = null) {
+      if(isSet($args["_currency"])) {
+        $args["currency"] = $args["_currency"];
+        unset($args["_currency"]);
+      }
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
       $method = "payment/balance";
       $resultOBJ  = $this->send($method , $args);
