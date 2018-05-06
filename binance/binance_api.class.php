@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BinanceApi
   * @author     Fransjo Leihitu
-  * @version    0.6
+  * @version    0.7
   *
   * API Documentation :
   */
@@ -19,7 +19,9 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "6";
+    private $_version_minor  = "7";
+
+    private $info = [];
 
     private $currencyAlias  = array(
       "ETHOS" => "BQX"
@@ -45,19 +47,55 @@
         unset($args["market"]);
       }
 
+      //debug($args);
+
+
+
       $uri  = $this->getBaseUrl() . $method;
+      //$ch = curl_init();
 
-      if(!empty($args)) {
-        $query = http_build_query($args, '', '&');
-        $uri  = $uri . "?" . $query;
-      }
-
-      $ch = curl_init($uri);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
       if($secure) {
 
+        $ts = (microtime(true) * 1000) + $this->info['timeOffset'];
+        $args['timestamp'] = number_format($ts, 0, '.', '');
+
+        /*
+        if (isset($params['wapi'])) {
+            unset($params['wapi']);
+            $base = $this->wapi;
+        }
+        */
+        $query = http_build_query($args, '', '&');
+        $uri  = $uri . "?" . $query;
+
+        $signature = hash_hmac('sha256', $query, $this->apiSecret);
+        $endpoint = $this->getBaseUrl() . $method . '?' . $query . '&signature=' . $signature;
+        $uri  = $endpoint;
+
+        $ch = curl_init($uri);
+
+        curl_setopt($ch, CURLOPT_URL, $endpoint);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'X-MBX-APIKEY: ' . $this->apiKey,
+        ));
+
+      } else {
+        $ch = curl_init($uri);
+        if(!empty($args)) {
+          $query = http_build_query($args, '', '&');
+          $uri  = $uri . "?" . $query;
+        }
+
       }
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+      //debug($uri);
+      curl_setopt($ch, CURLOPT_USERAGENT, "User-Agent: Mozilla/4.0 (compatible; PHP Binance API)");
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+      curl_setopt($ch, CURLOPT_HEADER, false);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 60);
 
       $execResult = curl_exec($ch);
 
@@ -80,6 +118,14 @@
           return $this->getErrorReturn($execResult);
       }
       return false;
+
+/*
+
+    SIGNED endpoints require an additional parameter, signature, to be sent in the query string or request body.
+    Endpoints use HMAC SHA256 signatures. The HMAC SHA256 signature is a keyed HMAC SHA256 operation. Use your secretKey as the key and totalParams as the value for the HMAC operation.
+    The signature is not case sensitive.
+    totalParams is defined as the query string concatenated with the request body.
+*/
 
       /*
       if($secure) $args["apikey"] = $this->apiKey;
@@ -193,9 +239,55 @@
       }
     }
 
-    // get balance
+    // get all balances
+    public function getBalances($args  = null) {
+      $ts = $this->time();
+
+      $method = "api/v3/account";
+
+      $result = $this->send($method , []);
+      return $result;
+    }
+
+    // get balance for 1 currency
+    // NOTE : this function first uses $this->balances() to get all $balances
+    // I haven't been able to get a single balance request yet ;)
     public function getBalance($args  = null) {
-      return $this->getErrorReturn("not implemented yet!");
+
+      if(isSet($args["_market"])) unset($args["_market"]);
+      if(isSet($args["_currency"])) {
+        $args["currency"] = $args["_currency"];
+        unset($args["_currency"]);
+      }
+      if(!isSet($args["currency"])) {
+        return $this->getErrorReturn("required parameter: currency");
+      }
+      $args["currency"] = $this->getCurrencyAlias($args["currency"]);
+
+      $result = $this->getBalances();
+
+      if(isSet($result["success"])) {
+        if(isSet($result["result"])) {
+          if(isSet($result["result"]["balances"])) {
+            $balances = $result["result"]["balances"];
+
+            foreach($balances as $asset) {
+              if($asset["asset"] == $args["currency"]) {
+
+                $asset["_raw"]  = $asset;
+
+                $asset["Balance"] =  $asset["free"];
+                $asset["Available"] = $asset["free"];
+
+                return $this->getReturn($result["success"],$result["message"],$asset);
+              }
+            }
+
+            return $this->getErrorReturn("Cannot find " . $args["currency"]);
+          }
+        }
+      }
+      return $this->getErrorReturn("Error fetching balance " . $args["currency"] . " from server");
     }
 
     // place buy order
@@ -232,6 +324,23 @@
       return $this->getErrorReturn("not implemented yet!");
     }
 
-
+    public function time()
+    {
+        $result = $this->send("api/v1/time" , [] , false);
+        if($result && isSet($result["success"])) {
+          if($result["success"] == true && isSet($result["result"])) {
+            if(isSet($result["result"]["serverTime"])) {
+              $this->info['timeOffset'] = $result["result"]["serverTime"] - (microtime(true) * 1000);
+              return $this->info['timeOffset'];
+            } else {
+              return $this->info['timeOffset'] ? isSet($this->info['timeOffset']) : 0;
+            }
+          } else {
+            return $this->info['timeOffset'] ? isSet($this->info['timeOffset']) : 0;
+          }
+        } else {
+          return $this->info['timeOffset'] ? isSet($this->info['timeOffset']) : 0;
+        }
+    }
   }
 ?>

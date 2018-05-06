@@ -1,3 +1,8 @@
+v0.7
+- Implemented getBalances()
+- Implemented getBalance()
+- Implemented secure send()
+
 v0.6
 - Better normalizing getOrderbook()
 
