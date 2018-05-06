@@ -47,14 +47,8 @@
         unset($args["market"]);
       }
 
-      //debug($args);
-
-
 
       $uri  = $this->getBaseUrl() . $method;
-      //$ch = curl_init();
-
-
       if($secure) {
 
         $ts = (microtime(true) * 1000) + $this->info['timeOffset'];
@@ -81,13 +75,14 @@
         ));
 
       } else {
-        $ch = curl_init($uri);
+        
         if(!empty($args)) {
           $query = http_build_query($args, '', '&');
           $uri  = $uri . "?" . $query;
         }
-
+        $ch = curl_init($uri);
       }
+
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
       //debug($uri);
