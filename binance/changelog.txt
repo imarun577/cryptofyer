@@ -1,3 +1,8 @@
+v0.8
+- implemented sell()
+- implemented buy()
+- update send() with POST
+
 v0.7
 - Implemented getBalances()
 - Implemented getBalance()

@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BinanceApi
   * @author     Fransjo Leihitu
-  * @version    0.7
+  * @version    0.8
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "7";
+    private $_version_minor  = "8";
 
     private $info = [];
 
@@ -37,7 +37,7 @@
         parent::setCurrencyAlias($this->currencyAlias);
     }
 
-    private function send($method = null , $args = array() , $secure = true) {
+    private function send($method = null , $args = array() , $secure = true , $transfer = "GET") {
       if(empty($method)) return array("status" => false , "error" => "method was not defined!");
 
       if(isSet($args["_market"])) unset($args["_market"]);
@@ -75,7 +75,7 @@
         ));
 
       } else {
-        
+
         if(!empty($args)) {
           $query = http_build_query($args, '', '&');
           $uri  = $uri . "?" . $query;
@@ -84,6 +84,10 @@
       }
 
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+      if($transfer == "POST") {
+        curl_setopt($ch, CURLOPT_POST, true);
+      }
 
       //debug($uri);
       curl_setopt($ch, CURLOPT_USERAGENT, "User-Agent: Mozilla/4.0 (compatible; PHP Binance API)");
@@ -113,55 +117,6 @@
           return $this->getErrorReturn($execResult);
       }
       return false;
-
-/*
-
-    SIGNED endpoints require an additional parameter, signature, to be sent in the query string or request body.
-    Endpoints use HMAC SHA256 signatures. The HMAC SHA256 signature is a keyed HMAC SHA256 operation. Use your secretKey as the key and totalParams as the value for the HMAC operation.
-    The signature is not case sensitive.
-    totalParams is defined as the query string concatenated with the request body.
-*/
-
-      /*
-      if($secure) $args["apikey"] = $this->apiKey;
-      $args["nonce"] = time();
-
-      $urlParams  = array();
-      foreach($args as $key => $val) {
-        $urlParams[]  = $key . "=" . $val;
-      }
-
-      $uri  = $this->getBaseUrl() . $method;
-
-      $argsString = join("&" , $urlParams);
-      if(!empty($urlParams)) {
-          $uri  = $uri . "?" . $argsString;
-      }
-
-      $sign = $secure == true ? hash_hmac('sha512',$uri,$this->apiSecret) : null;
-
-      $uri = trim(preg_replace('/\s+/', '', $uri));
-
-      $ch = curl_init($uri);
-      if($secure) curl_setopt($ch, CURLOPT_HTTPHEADER, array('apisign:'.$sign));
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      $execResult = curl_exec($ch);
-
-      // check if there's a curl error
-      if(curl_error($ch)) return $this->getErrorReturn(curl_error($ch));
-
-      // try to convert json repsonse to assoc array
-      if($obj = json_decode($execResult , true)) {
-        if($obj["success"] == true) {
-          return $this->getReturn($obj["success"],$obj["message"],$obj["result"]);
-        } else {
-          return $this->getErrorReturn($obj["message"]);
-        }
-      } else {
-          return $this->getErrorReturn($execResult);
-      }
-      */
-
     }
 
     public function getMarketPair($market = "" , $currency = "") {
@@ -287,12 +242,106 @@
 
     // place buy order
     public function buy($args = null) {
-      return $this->getErrorReturn("not implemented yet!");
+
+      $this->time();
+
+      if(!isSet($args["symbol"])) {
+        if(isSet($args["_market"]) && isSet($args["_currency"])) {
+          $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+          unset($args["_market"]);
+          unset($args["_currency"]);
+          $args["symbol"] = $args["market"];
+        }
+        if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      }
+      if(isSet($args["market"])) unset($args["market"]);
+
+      $args["side"]       = "buy";
+      $args["recvWindow"] = 60000;
+
+      $args["type"]         = isSet($args["type"]) ? $args["type"] : "LIMIT";
+      $args["timeInForce"]  = "GTC";
+
+
+      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
+      $args["quantity"] = $args["amount"];
+      unset($args["amount"]);
+
+      if (is_numeric($args["quantity"]) === false) {
+          return $this->getErrorReturn("warning: quantity expected numeric got " . gettype($quantity));
+      }
+
+      if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
+      $args["price"]  = $args["rate"];
+      unset($args["rate"]);
+
+      if (gettype($args["price"]) !== "string") {
+        $args["price"] = $price = number_format($args["price"], 8, '.', '');
+      }
+
+      if (is_string($args["price"]) === false) {
+        return $this->getErrorReturn("warning: price expected string got " . gettype($args["price"]));
+      }
+
+      $resultOBJ  = $this->send("api/v3/order" , $args , true , "POST");
+
+      if($resultOBJ["success"] == true) {
+        // do we need to normalize the return?
+        return $resultOBJ;
+      }
+      return $resultOBJ;
     }
 
     // place sell order
     public function sell($args = null) {
-      return $this->getErrorReturn("not implemented yet!");
+      $this->time();
+
+      if(!isSet($args["symbol"])) {
+        if(isSet($args["_market"]) && isSet($args["_currency"])) {
+          $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+          unset($args["_market"]);
+          unset($args["_currency"]);
+          $args["symbol"] = $args["market"];
+        }
+        if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      }
+      if(isSet($args["market"])) unset($args["market"]);
+
+      $args["side"]       = "sell";
+      $args["recvWindow"] = 60000;
+
+      $args["type"]         = isSet($args["type"]) ? $args["type"] : "LIMIT";
+      $args["timeInForce"]  = "GTC";
+
+
+      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
+      $args["quantity"] = $args["amount"];
+      unset($args["amount"]);
+
+      if (is_numeric($args["quantity"]) === false) {
+          return $this->getErrorReturn("warning: quantity expected numeric got " . gettype($quantity));
+      }
+
+      if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
+      $args["price"]  = $args["rate"];
+      unset($args["rate"]);
+
+      if (gettype($args["price"]) !== "string") {
+        $args["price"] = $price = number_format($args["price"], 8, '.', '');
+      }
+
+      if (is_string($args["price"]) === false) {
+          // WPCS: XSS OK.
+        return $this->getErrorReturn("warning: price expected string got " . gettype($args["price"]));
+      }
+
+      $resultOBJ  = $this->send("api/v3/order" , $args , true , "POST");
+
+      if($resultOBJ["success"] == true) {
+        // do we need to normalize the return?
+        return $resultOBJ;
+      }
+      return $resultOBJ;
     }
 
     // get open orders

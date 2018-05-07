@@ -1,4 +1,4 @@
-CryptoFyer Binance v0.7
+CryptoFyer Binance v0.8
 ==============
 
 PHP client api for Binance
@@ -39,10 +39,16 @@ Public API functions
 | Endpoint uri | Api function | Parameters | Remarks |
 | --- | --- | --- | --- |
 | api/v3/ticker/price | getTicker() |  |  |
-| /api/v3/ticker/bookTicker | getOrderbookTicker() |  |  |
+| api/v3/ticker/bookTicker | getOrderbookTicker() |  |  |
+| api/v1/time | time() |  | Get server time |
+
 
 
 Private API functions
 ----
 | Endpoint uri | Api function | Parameters | Remarks |
 | --- | --- | --- | --- |
+| api/v3/account| getBalances() |  | Get all balances in the account |
+| api/v3/account| getBalance() |  | Uses getBalances() to get a single price for now |
+| api/v3/order| buy() |  |  |
+| api/v3/order| sell() |  |  |
