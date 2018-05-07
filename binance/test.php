@@ -23,8 +23,14 @@
 
 
 
+
   echo "<h1>Ticker " . $market . "</h1>";
-  $result = $exchange->getTicker(array("_market" => $_market , "_currency" => $_currency));
+  $result = $exchange->getTicker(
+    array(
+      "_market" => $_market ,
+      "_currency" => $_currency
+    )
+  );
   debug($result);
 
   /*

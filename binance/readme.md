@@ -1,4 +1,4 @@
-CryptoFyer Binance v0.8
+CryptoFyer Binance v0.9
 ==============
 
 PHP client api for Binance

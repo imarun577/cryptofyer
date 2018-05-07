@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BinanceApi
   * @author     Fransjo Leihitu
-  * @version    0.8
+  * @version    0.9
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "8";
+    private $_version_minor  = "9";
 
     private $info = [];
 
@@ -271,9 +271,7 @@
           return $this->getErrorReturn("warning: quantity expected numeric got " . gettype($quantity));
       }
 
-      if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
-      $args["price"]  = $args["rate"];
-      unset($args["rate"]);
+      if(!isSet($args["price"])) return $this->getErrorReturn("required parameter: price");
 
       if (gettype($args["price"]) !== "string") {
         $args["price"] = $price = number_format($args["price"], 8, '.', '');
@@ -286,9 +284,11 @@
       $resultOBJ  = $this->send("api/v3/order" , $args , true , "POST");
 
       if($resultOBJ["success"] == true) {
-        // do we need to normalize the return?
-        // TODO find the orderid
-        return $resultOBJ;
+
+        $result = $resultOBJ["result"];
+        $result["orderid"]  = $result["orderId"];
+        $resultOBJ["result"]  = $result;
+
       }
       return $resultOBJ;
     }
@@ -323,9 +323,7 @@
           return $this->getErrorReturn("warning: quantity expected numeric got " . gettype($quantity));
       }
 
-      if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
-      $args["price"]  = $args["rate"];
-      unset($args["rate"]);
+      if(!isSet($args["price"])) return $this->getErrorReturn("required parameter: price");
 
       if (gettype($args["price"]) !== "string") {
         $args["price"] = $price = number_format($args["price"], 8, '.', '');
@@ -339,9 +337,11 @@
       $resultOBJ  = $this->send("api/v3/order" , $args , true , "POST");
 
       if($resultOBJ["success"] == true) {
-        // do we need to normalize the return?
-        // TODO find the orderid
-        return $resultOBJ;
+
+        $result = $resultOBJ["result"];
+        $result["orderid"]  = $result["orderId"];
+        $resultOBJ["result"]  = $result;
+
       }
       return $resultOBJ;
     }
