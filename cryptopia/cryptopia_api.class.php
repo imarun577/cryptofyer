@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.20
+  * @version    0.21
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "20";
+    private $_version_minor  = "21";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -234,10 +234,8 @@
         $result = $resultOBJ["result"];
         $result["orderid"]  = $result["OrderId"];
         $resultOBJ["result"]  = $result;
-        return $resultOBJ;
-      } else {
-          return $resultOBJ;
       }
+      return $resultOBJ;
     }
 
     public function sell($args = null) {
@@ -268,10 +266,8 @@
         $result = $resultOBJ["result"];
         $result["orderid"]  = $result["OrderId"];
         $resultOBJ["result"]  = $result;
-        return $resultOBJ;
-      } else {
-          return $resultOBJ;
       }
+      return $resultOBJ;
     }
 
     public function getMarket($args = null) {

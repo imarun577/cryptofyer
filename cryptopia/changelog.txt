@@ -1,3 +1,7 @@
+v0.21
+- update sell()
+- update buy()
+
 v0.20
 - Better normalizing getOrderbook()
 
