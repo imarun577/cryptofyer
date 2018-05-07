@@ -1,3 +1,6 @@
+v1.5
+- update sell() and buy()
+
 v1.4
 - removed $_currency and $_market vars in SEND() function
 

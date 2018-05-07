@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    1.4
+  * @version    1.5
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "1";
-    private $_version_minor  = "4";
+    private $_version_minor  = "5";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -278,9 +278,7 @@
       $args["quantity"] = $args["amount"];
       unset($args["amount"]);
 
-      if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
-      $args["price"] = $args["rate"];
-      unset($args["rate"]);
+      if(!isSet($args["price"])) return $this->getErrorReturn("required parameter: price");
 
       $method = "/exchange/buylimit";
       $args["currencyPair"] = $args["market"];
@@ -288,8 +286,9 @@
       $resultOBJ  = $this->send( $method, $args , true , "POST");
 
       if($resultOBJ["success"]) {
-        $result = $resultOBJ["result"];
-        return $result;
+        // to something with the result?
+        // TODO find the orderid
+        return $resultOBJ;
       } else {
         return $resultOBJ;
       }
@@ -308,9 +307,7 @@
       $args["quantity"] = $args["amount"];
       unset($args["amount"]);
 
-      if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
-      $args["price"] = $args["rate"];
-      unset($args["rate"]);
+      if(!isSet($args["price"])) return $this->getErrorReturn("required parameter: price");
 
       $method = "/exchange/selllimit";
       $args["currencyPair"] = $args["market"];
@@ -318,8 +315,10 @@
       $resultOBJ  = $this->send( $method, $args , true , "POST");
 
       if($resultOBJ["success"]) {
-        $result = $resultOBJ["result"];
-        return $result;
+        // to something with the result?
+        // TODO find the orderid
+
+        return $resultOBJ;
       } else {
         return $resultOBJ;
       }
