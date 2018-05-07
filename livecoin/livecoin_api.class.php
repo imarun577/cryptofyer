@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    1.5
+  * @version    1.6
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "1";
-    private $_version_minor  = "5";
+    private $_version_minor  = "6";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -286,12 +286,13 @@
       $resultOBJ  = $this->send( $method, $args , true , "POST");
 
       if($resultOBJ["success"]) {
-        // to something with the result?
-        // TODO find the orderid
-        return $resultOBJ;
-      } else {
-        return $resultOBJ;
+
+        $result = $resultOBJ["result"];
+        $result["orderid"]  = $result["orderId"];
+        $resultOBJ["result"]  = $result;
+
       }
+      return $resultOBJ;
     }
 
     // place sell order
@@ -315,13 +316,13 @@
       $resultOBJ  = $this->send( $method, $args , true , "POST");
 
       if($resultOBJ["success"]) {
-        // to something with the result?
-        // TODO find the orderid
 
-        return $resultOBJ;
-      } else {
-        return $resultOBJ;
+        $result = $resultOBJ["result"];
+        $result["orderid"]  = $result["orderId"];
+        $resultOBJ["result"]  = $result;
+
       }
+      return $resultOBJ;
     }
 
     // get open orders

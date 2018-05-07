@@ -1,3 +1,7 @@
+v1.6
+- update sell() with orderid return
+- update buy() with orderid return
+
 v1.5
 - update sell() and buy()
 
