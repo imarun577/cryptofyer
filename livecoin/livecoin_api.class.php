@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    1.6
+  * @version    1.7
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "1";
-    private $_version_minor  = "6";
+    private $_version_minor  = "7";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -460,6 +460,45 @@
       }
     }
 
+    public function withdraw($args = null) {
+
+      if(isSet($args["_market"])) unset($args["_market"]);
+
+      if(!isSet($args["currency"])) {
+        $args["currency"] = "";
+        if(isSet($args["_currency"])) {
+          $args["currency"] = $args["_currency"];
+          unset($args["_currency"]);
+        }
+      }
+      $args["currency"] = trim($args["currency"]);
+      if($args["currency"] == "") {
+        return $this->getErrorReturn("required parameter: currency");
+      }
+
+      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: ammount");
+      if(!isSet($args["wallet"])) return $this->getErrorReturn("required parameter: wallet");
+
+
+      $method = "/payment/out/coin";
+
+      $resultOBJ  = $this->send( $method, $args, true , "POST");
+
+      if($resultOBJ["success"]) {
+        $result = $resultOBJ["result"];
+
+        if(isSet($result["fault"])) {
+          if(!empty($result["fault"])) {
+            $resultOBJ["success"] = false;
+          }
+        }
+
+        $resultOBJ["result"]  = $result;
+      }
+      return $resultOBJ;
+
+
+    }
 
   }
 ?>
