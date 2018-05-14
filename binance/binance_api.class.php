@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BinanceApi
   * @author     Fransjo Leihitu
-  * @version    0.9
+  * @version    0.10
   *
   * API Documentation :
   */
@@ -12,6 +12,7 @@
 
     // base exchange api url
     private $exchangeUrl  = "https://api.binance.com";
+    private $wapiUrl = "https://api.binance.com/wapi/";
     private $apiVersion   = "";
 
     // base url for currency
@@ -19,7 +20,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "9";
+    private $_version_minor  = "10";
 
     private $info = [];
 
@@ -47,19 +48,12 @@
         unset($args["market"]);
       }
 
-
       $uri  = $this->getBaseUrl() . $method;
       if($secure) {
 
         $ts = (microtime(true) * 1000) + $this->info['timeOffset'];
         $args['timestamp'] = number_format($ts, 0, '.', '');
 
-        /*
-        if (isset($params['wapi'])) {
-            unset($params['wapi']);
-            $base = $this->wapi;
-        }
-        */
         $query = http_build_query($args, '', '&');
         $uri  = $uri . "?" . $query;
 
@@ -370,8 +364,7 @@
       return $this->getErrorReturn("not implemented yet!");
     }
 
-    public function time()
-    {
+    public function time() {
         $result = $this->send("api/v1/time" , [] , false);
         if($result && isSet($result["success"])) {
           if($result["success"] == true && isSet($result["result"])) {
@@ -388,5 +381,40 @@
           return $this->info['timeOffset'] ? isSet($this->info['timeOffset']) : 0;
         }
     }
+
+    public function withdraw($args = null) {
+
+      if(isSet($args["_market"])) unset($args["_market"]);
+
+      if(!isSet($args["currency"])) {
+        $args["currency"] = "";
+        if(isSet($args["_currency"])) {
+          $args["currency"] = $args["_currency"];
+          unset($args["_currency"]);
+        }
+      }
+      $args["currency"] = trim($args["currency"]);
+      if($args["currency"] == "") {
+        return $this->getErrorReturn("required parameter: currency");
+      }
+
+      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
+      if(!isSet($args["wallet"])) return $this->getErrorReturn("required parameter: wallet");
+
+      $args["name"] = "API Withdraw";
+      $args["address"] = $args["wallet"]; unset($args["wallet"]);
+      $args["asset"] = $this->getMarketPair("",$args["currency"]); unset($args["currency"]);
+
+      $method = "wapi/v3/withdraw.html";
+
+      $resultOBJ  = $this->send( $method, $args, true , "POST");
+
+      if($resultOBJ["success"]) {
+        $result = $resultOBJ["result"];
+        $resultOBJ["result"]  = $result;
+      }
+      return $resultOBJ;
+    }
+
   }
 ?>

@@ -1,4 +1,4 @@
-CryptoFyer Binance v0.9
+CryptoFyer Binance v0.10
 ==============
 
 PHP client api for Binance
@@ -52,3 +52,4 @@ Private API functions
 | api/v3/account| getBalance() |  | Uses getBalances() to get a single price for now |
 | api/v3/order| buy() |  |  |
 | api/v3/order| sell() |  |  |
+| wapi/v3/withdraw.html | withdraw() |  |  |

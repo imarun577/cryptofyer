@@ -1,3 +1,6 @@
+v10
+- implemented withdraw()
+
 v0.9
 - update sell() return with orderid
 - update buy() return with orderid
