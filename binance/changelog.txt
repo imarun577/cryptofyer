@@ -1,4 +1,7 @@
-v10
+v0.11
+- update withdraw()
+
+v0.10
 - implemented withdraw()
 
 v0.9

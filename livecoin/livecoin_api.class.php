@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    1.7
+  * @version    1.8
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "1";
-    private $_version_minor  = "7";
+    private $_version_minor  = "8";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -476,9 +476,13 @@
         return $this->getErrorReturn("required parameter: currency");
       }
 
-      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: ammount");
-      if(!isSet($args["wallet"])) return $this->getErrorReturn("required parameter: wallet");
+      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
 
+      if(isSet($args["address"])) {
+        $args["wallet"] = $args["address"];
+        unset($args["address"]);
+      }
+      if(!isSet($args["wallet"])) return $this->getErrorReturn("required parameter: address");
 
       $method = "/payment/out/coin";
 

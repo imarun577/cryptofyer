@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BinanceApi
   * @author     Fransjo Leihitu
-  * @version    0.10
+  * @version    0.11
   *
   * API Documentation :
   */
@@ -20,7 +20,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "10";
+    private $_version_minor  = "11";
 
     private $info = [];
 
@@ -399,11 +399,20 @@
       }
 
       if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
-      if(!isSet($args["wallet"])) return $this->getErrorReturn("required parameter: wallet");
+
+      if(isSet($args["address"])) {
+        $args["wallet"] = $args["address"];
+        unset($args["address"]);
+      }
+      if(!isSet($args["wallet"])) return $this->getErrorReturn("required parameter: address");
 
       $args["name"] = "API Withdraw";
-      $args["address"] = $args["wallet"]; unset($args["wallet"]);
-      $args["asset"] = $this->getMarketPair("",$args["currency"]); unset($args["currency"]);
+
+      $args["address"] = $args["wallet"];
+      unset($args["wallet"]);
+
+      $args["asset"] = $this->getMarketPair("",$args["currency"]);
+      unset($args["currency"]);
 
       $method = "wapi/v3/withdraw.html";
 
