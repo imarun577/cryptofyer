@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.22
+  * @version    0.23
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "22";
+    private $_version_minor  = "23";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -32,6 +32,9 @@
 
     private function send($method = null , $args = array() , $secure = true) {
       if(empty($method)) return $this->getErrorReturn("method was not defined!");
+
+      if(isSet($args["_market"])) unset($args["_market"]);
+      if(isSet($args["_currency"])) unset($args["_currency"]);
 
       $urlParams  = $args;
       $uri        = $this->getBaseUrl() . $method;
@@ -98,6 +101,10 @@
     }
 
     public function getDepositAddress($args = null) {
+      if(isSet($args["_currency"])) {
+        $args["currency"] = $args["_currency"];
+        unset($args["_currency"]);
+      }
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
       return $this->send("GetDepositAddress" , $args);
     }
@@ -153,16 +160,20 @@
     }
 
     public function getOrder($args  = null) {
-      if(!isSet($args["orderid"])) return $this->getErrorReturn("required parameter: orderid");
+      if(isSet($args["orderid"])) {
+        $args["order_id"] = $args["orderid"];
+        unset($args["orderid"]);
+      }
+      if(!isSet($args["order_id"])) return $this->getErrorReturn("required parameter: order_id");
 
       $resultOBJ  = $this->getOrders($args);
       if($resultOBJ["success"] == true) {
         foreach($resultOBJ["result"] as $result) {
-          if($result["orderid"] == $args["orderid"]) {
+          if($result["order_id"] == $args["order_id"]) {
             return $this->getReturn(true , null , $result);
           }
         }
-        $this->getErrorReturn("cannot find order: " . $args["orderid"]);
+        $this->getErrorReturn("cannot find order: " . $args["order_id"]);
       } else {
         return $resultOBJ;
       }
@@ -183,20 +194,25 @@
       if($resultOBJ["success"] == true) {
         $result = array();
         foreach($resultOBJ["result"] as $item) {
-          $item["orderid"]  = $item["OrderId"];
+          $item["order_id"]  = $item["orderid"]  = $item["OrderId"];
           $result[] = $item;
         }
         $resultOBJ["result"]  = $result;
-        return $resultOBJ;
-      } else {
-        return $resultOBJ;
       }
+      return $resultOBJ;
+
     }
 
     public function cancel($args = null) {
-      if(!isSet($args["orderid"])) return $this->getErrorReturn("required parameter: orderid");
-      $args["OrderId"]  = $args["orderid"];
-      unset($args["orderid"]);
+
+      if(isSet($args["orderid"])) {
+        $args["order_id"] = $args["orderid"];
+        unset($args["orderid"]);
+      }
+      if(!isSet($args["order_id"])) return $this->getErrorReturn("required parameter: order_id");
+
+      $args["OrderId"]  = $args["order_id"];
+      unset($args["order_id"]);
 
       if(!isSet($args["type"])) $args["type"] = "Trade";
       $args["Type"] = $args["type"];
