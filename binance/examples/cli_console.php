@@ -193,11 +193,13 @@
 
             if(!empty($ordersOBJ["result"])) {
               foreach($ordersOBJ["result"] as $item) {
-                $orderType    = $item["OrderType"];
-                $OrderUuid    = $item['OrderUuid'];
-                $Quantity     = $item['Quantity'];
-                $PricePerUnit = $item['Limit'];
-                $QuantityRemaining  = $item['QuantityRemaining'];
+
+                $orderType    = $item["order_type"];
+                $OrderUuid    = $item['order_id'];
+                $Quantity     = $item['amount'];
+                $PricePerUnit = $item['price'];
+                $QuantityRemaining  = $item['amount_remaining'];
+                $QuantityRemaining =  number_format($QuantityRemaining, 8, '.', '');
 
                 fwrite(STDOUT, "[$counter] $orderType $QuantityRemaining/$Quantity $PricePerUnit $OrderUuid \n");
                 $counter++;
@@ -209,14 +211,24 @@
                 if($selectOrder <= 0) {
                   if($selectOrder == -1) {
                     foreach($ordersOBJ["result"] as $item) {
-                      $cancelOrderOBJ = $exchange->cancel(array("orderid" => $item["orderid"]));
+
+                      $cancelOrderOBJ = $exchange->cancel(
+                        array(
+                          "_market" => $_market,
+                          "_currency" => $_currency,
+                          "order_id" => $item["order_id"]
+                        )
+                      );
                       if(!empty($cancelOrderOBJ)) {
                         if($cancelOrderOBJ["success"] == true) {
-                          $orderType    = $item["OrderType"];
-                          $OrderUuid    = $item['orderid'];
-                          $Quantity     = $item['Quantity'];
-                          $PricePerUnit = $item['Limit'];
-                          $QuantityRemaining  = $item['QuantityRemaining'];
+
+                          $orderType    = $item["order_type"];
+                          $OrderUuid    = $item['order_id'];
+                          $Quantity     = $item['amount'];
+                          $PricePerUnit = $item['price'];
+                          $QuantityRemaining  = $item['amount_remaining'];
+                          $QuantityRemaining =  number_format($QuantityRemaining, 8, '.', '');
+
                           fwrite(STDOUT, "[ORDER CANCELED] $orderType $QuantityRemaining/$Quantity $PricePerUnit $OrderUuid \n");
                         } else {
                           $error  = $cancelOrderOBJ["message"];
@@ -232,15 +244,23 @@
                   }
                 } else {
                   $order  = $ordersOBJ["result"][$selectOrder-1];
-                  $cancelOrderOBJ = $exchange->cancel(array("orderid" => $order["orderid"]));
+                  $cancelOrderOBJ = $exchange->cancel(
+                    array(
+                      "_market" => $_market,
+                      "_currency" => $_currency,
+                      "order_id" => $item["order_id"]
+                    )
+                  );
                   if(!empty($cancelOrderOBJ)) {
                     if($cancelOrderOBJ["success"] == true) {
-                      $item         = $order;
-                      $orderType    = $item["OrderType"];
-                      $OrderUuid    = $item['OrderUuid'];
-                      $Quantity     = $item['Quantity'];
-                      $PricePerUnit = $item['Limit'];
-                      $QuantityRemaining  = $item['QuantityRemaining'];
+
+                      $orderType    = $item["order_type"];
+                      $OrderUuid    = $item['order_id'];
+                      $Quantity     = $item['amount'];
+                      $PricePerUnit = $item['price'];
+                      $QuantityRemaining  = $item['amount_remaining'];
+                      $QuantityRemaining =  number_format($QuantityRemaining, 8, '.', '');
+
                       fwrite(STDOUT, "[ORDER CANCELED] $orderType $QuantityRemaining/$Quantity $PricePerUnit $OrderUuid \n");
                       fwrite(STDOUT, "[$market] Returning to main menu\n");
                       getTicker($exchange,$market);
@@ -293,11 +313,12 @@
       if($ordersOBJ["success"]  == true) {
         if(!empty($ordersOBJ["result"])) {
           foreach($ordersOBJ["result"] as $item) {
-            $orderType    = $item["OrderType"];
-            $OrderUuid    = $item['OrderUuid'];
-            $Quantity     = $item['Quantity'];
-            $PricePerUnit = $item['Limit'];
-            $QuantityRemaining  = $item['QuantityRemaining'];
+            $orderType    = $item["order_type"];
+            $OrderUuid    = $item['orderid'];
+            $Quantity     = $item['amount'];
+            $PricePerUnit = $item['price'];
+            $QuantityRemaining  = $item['amount_remaining'];
+            $QuantityRemaining =  number_format($QuantityRemaining, 8, '.', '');
 
             fwrite(STDOUT, "* $orderType $QuantityRemaining/$Quantity $PricePerUnit $OrderUuid \n");
           }

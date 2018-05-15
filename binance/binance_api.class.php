@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BinanceApi
   * @author     Fransjo Leihitu
-  * @version    0.12
+  * @version    0.13
   *
   * API Documentation :
   */
@@ -20,7 +20,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "12";
+    private $_version_minor  = "13";
 
     private $info = [];
 
@@ -81,6 +81,10 @@
 
       if($transfer == "POST") {
         curl_setopt($ch, CURLOPT_POST, true);
+      }
+
+      if ($transfer == "DELETE") {
+          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $transfer);
       }
 
       //debug($uri);
@@ -237,8 +241,9 @@
       return $this->getErrorReturn("Error fetching balance " . $args["currency"] . " from server");
     }
 
-    // place buy order
-    public function buy($args = null) {
+    public function order($args = null , $side = "") {
+
+      if(empty($side)) return $this->getErrorReturn("required parameter: side");
 
       $this->time();
 
@@ -253,12 +258,11 @@
       }
       if(isSet($args["market"])) unset($args["market"]);
 
-      $args["side"]       = "buy";
+      $args["side"]       = $side;
       $args["recvWindow"] = 60000;
 
       $args["type"]         = isSet($args["type"]) ? $args["type"] : "LIMIT";
       $args["timeInForce"]  = "GTC";
-
 
       if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
       $args["quantity"] = $args["amount"];
@@ -283,16 +287,25 @@
       if($resultOBJ["success"] == true) {
 
         $result = $resultOBJ["result"];
-        $result["orderid"]  = $result["orderId"];
+        $result["order_id"]  = $result["orderid"]  = $result["orderId"];
         $resultOBJ["result"]  = $result;
 
       }
       return $resultOBJ;
+    }
+
+    // place buy order
+    public function buy($args = null) {
+      return $this->order($args , "buy");
     }
 
     // place sell order
     public function sell($args = null) {
-      $this->time();
+      return $this->order($args , "sell");
+    }
+
+    // get open orders
+    public function getOrders($args = null) {
 
       if(!isSet($args["symbol"])) {
         if(isSet($args["_market"]) && isSet($args["_currency"])) {
@@ -301,56 +314,66 @@
           unset($args["_currency"]);
           $args["symbol"] = $args["market"];
         }
-        if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       }
       if(isSet($args["market"])) unset($args["market"]);
 
-      $args["side"]       = "sell";
-      $args["recvWindow"] = 60000;
+      $method = "api/v3/openOrders";
 
-      $args["type"]         = isSet($args["type"]) ? $args["type"] : "LIMIT";
-      $args["timeInForce"]  = "GTC";
+      $resultOBJ  = $this->send( $method, $args, true);
 
-
-      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
-      $args["quantity"] = $args["amount"];
-      unset($args["amount"]);
-
-      if (is_numeric($args["quantity"]) === false) {
-          return $this->getErrorReturn("warning: quantity expected numeric got " . gettype($quantity));
-      }
-
-      if(!isSet($args["price"])) return $this->getErrorReturn("required parameter: price");
-
-      if (gettype($args["price"]) !== "string") {
-        $args["price"] = $price = number_format($args["price"], 8, '.', '');
-      }
-
-      if (is_string($args["price"]) === false) {
-          // WPCS: XSS OK.
-        return $this->getErrorReturn("warning: price expected string got " . gettype($args["price"]));
-      }
-
-      $resultOBJ  = $this->send("api/v3/order" , $args , true , "POST");
-
-      if($resultOBJ["success"] == true) {
-
+      if($resultOBJ["success"]) {
         $result = $resultOBJ["result"];
-        $result["orderid"]  = $result["orderId"];
-        $resultOBJ["result"]  = $result;
 
+        if(!empty($result)) {
+          $_result  = array();
+          foreach($result as $item) {
+            $item["order_id"]         = $item["orderid"]  = $item["orderId"];
+            $item["order_type"]       = $item["type"]  . " " . $item["side"];
+            $item['amount']           = $item["origQty"];
+            $item['amount_remaining'] = $item["origQty"] - $item["executedQty"];
+            $_result[]  = $item;
+          }
+          $result = $_result;
+        }
+
+        $resultOBJ["result"]  = $result;
       }
       return $resultOBJ;
-    }
-
-    // get open orders
-    public function getOrders($args = null) {
-      return $this->getErrorReturn("not implemented yet!");
     }
 
     // get order
     public function getOrder($args = null) {
       return $this->getErrorReturn("not implemented yet!");
+    }
+
+    // cancel order
+    public function cancel($args = null) {
+      if(!isSet($args["symbol"])) {
+        if(isSet($args["_market"]) && isSet($args["_currency"])) {
+          $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+          unset($args["_market"]);
+          unset($args["_currency"]);
+          $args["symbol"] = $args["market"];
+        } else {
+          $this->getErrorReturn("required parameter: symbol");
+        }
+      }
+      if(isSet($args["market"])) unset($args["market"]);
+
+      if(!isSet($args["order_id"])) {
+        $this->getErrorReturn("required parameter: order_id");
+      }
+      $args["orderId"]  = $args["order_id"];
+      unset($args["order_id"]);
+
+
+      $method = "api/v3/order";
+
+
+      $resultOBJ  = $this->send( $method, $args, true , "DELETE");
+
+
+      return $resultOBJ;
     }
 
     // Get the exchange currency detail url
