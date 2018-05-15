@@ -314,7 +314,7 @@
         if(!empty($ordersOBJ["result"])) {
           foreach($ordersOBJ["result"] as $item) {
             $orderType    = $item["order_type"];
-            $OrderUuid    = $item['orderid'];
+            $OrderUuid    = $item['order_id'];
             $Quantity     = $item['amount'];
             $PricePerUnit = $item['price'];
             $QuantityRemaining  = $item['amount_remaining'];
