@@ -1,3 +1,6 @@
+v0.22
+- buy() and sell() using order()
+
 v0.21
 - update sell()
 - update buy()

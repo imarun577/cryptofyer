@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.21
+  * @version    0.22
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "21";
+    private $_version_minor  = "22";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -205,7 +205,18 @@
       return $this->send("CancelTrade" , $args);
     }
 
-    public function buy($args = null) {
+    public function order($args = null , $side = "") {
+
+      if(empty($side)) return $this->getErrorReturn("required parameter: side");
+      $method = "";
+      if($side == "buy") {
+        $args["Type"] = "Buy";
+      }
+      if($side == "sell") {
+        $args["Type"] = "Sell";
+      }
+      if(!isSet($args["Type"])) return $this->getErrorReturn("incorrect side");
+
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
         $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
@@ -215,8 +226,6 @@
       $args["Market"] = strtoupper($args["market"]);
       unset($args["market"]);
 
-      if(!isSet($args["Type"])) $args["Type"] = "Buy";
-
       if(isSet($args["price"])) {
         $args["rate"] = $args["price"];
         unset($args["price"]);
@@ -232,42 +241,18 @@
       $resultOBJ = $this->send("SubmitTrade" , $args);
       if($resultOBJ["success"] == true) {
         $result = $resultOBJ["result"];
-        $result["orderid"]  = $result["OrderId"];
+        $result["order_id"]  = $result["orderid"]  = $result["OrderId"];
         $resultOBJ["result"]  = $result;
       }
       return $resultOBJ;
     }
 
+    public function buy($args = null) {
+      return $this->order($args , "buy");
+    }
+
     public function sell($args = null) {
-      if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
-      }
-      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
-      $args["Market"] = $args["market"];
-      unset($args["market"]);
-      $args["Market"] = strtoupper(str_replace("-","/",$args["Market"]));
-
-      if(!isSet($args["Type"])) $args["Type"] = "Sell";
-
-      if(isSet($args["price"])) {
-        $args["rate"] = $args["price"];
-        unset($args["price"]);
-      }
-      if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
-      $args["Rate"] = $args["rate"];
-      unset($args["rate"]);
-
-      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
-      $args["Amount"] = $args["amount"];
-      unset($args["amount"]);
-
-      $resultOBJ = $this->send("SubmitTrade" , $args);
-      if($resultOBJ["success"] == true) {
-        $result = $resultOBJ["result"];
-        $result["orderid"]  = $result["OrderId"];
-        $resultOBJ["result"]  = $result;
-      }
-      return $resultOBJ;
+      return $this->order($args , "sell");
     }
 
     public function getMarket($args = null) {
