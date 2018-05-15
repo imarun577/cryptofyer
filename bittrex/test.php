@@ -21,12 +21,23 @@
   $result = $exchange->getVersion();
   debug($result);
 
+  /*
   echo "<h1>Get Balance on " . $_currency . "</h1>";
-  $result = $exchange->getBalance(array("currency" => $_currency));
+  $result = $exchange->getBalance(
+    array(
+      "_currency" => $_currency
+    )
+  );
   debug($result);
-
+  */
 
   echo "<h1>Ticker " . $market . "</h1>";
-  $result = $exchange->getTicker(array("_market" => $_market , "_currency" => $_currency));
+  $result = $exchange->getTicker(
+    array(
+      "_market" => $_market ,
+      "_currency" => $_currency
+    )
+  );
   debug($result);
+
 ?>

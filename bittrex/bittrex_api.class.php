@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BittrexApi
   * @author     Fransjo Leihitu
-  * @version    0.16
+  * @version    0.17
   *
   * API Documentation : https://bittrex.com/home/api
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "16";
+    private $_version_minor  = "17";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -247,22 +247,46 @@
     }
 
     public function getBalance($args = null) {
+
+      if(isSet($args["_market"])) unset($args["_market"]);
+      if(isSet($args["_currency"])) {
+        $args["currency"] = trim($args["_currency"]);
+        if($args["currency"] == "") unset($args["currency"]);
+        unset($args["_currency"]);
+      }
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
+
       return $this->send("account/getbalance" , $args);
     }
 
     public function getDepositAddress($args = null) {
+
+      if(isSet($args["_market"])) unset($args["_market"]);
+      if(isSet($args["_currency"])) {
+        $args["currency"] = trim($args["_currency"]);
+        if($args["currency"] == "") unset($args["currency"]);
+        unset($args["_currency"]);
+      }
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
+
       return $this->send("account/getdepositaddress" , $args);
     }
 
 
     public function withdraw($args = null) {
+
+      if(isSet($args["_market"])) unset($args["_market"]);
+      if(isSet($args["_currency"])) {
+        $args["currency"] = trim($args["_currency"]);
+        if($args["currency"] == "") unset($args["currency"]);
+        unset($args["_currency"]);
+      }
+      if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
+
       if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
       $args["quantity"] = $args["amount"];
       unset($args["amount"]);
 
-      if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
       if(!isSet($args["address"])) return $this->getErrorReturn("required parameter: address");
 
       return $this->send("account/withdraw" , $args);
@@ -272,15 +296,14 @@
       if(!isSet($args["orderid"])) return $this->getErrorReturn("required parameter: orderid");
       $args["uuid"] = $args["orderid"];
       unset($args["orderid"]);
+
       $resultOBJ  = $this->send("account/getorder" , $args);
       if($resultOBJ["success"] == true) {
         $result = $resultOBJ["result"];
         $result["orderid"]  = $result["OrderUuid"];
         $resultOBJ["result"]  = $result;
-        return $resultOBJ;
-      } else {
-        return $resultOBJ;
       }
+      return $resultOBJ;
     }
 
     public function getOrderHistory($args = null) {
@@ -292,11 +315,25 @@
     }
 
     public function getWithdrawalHistory($args = null) {
+
+      if(isSet($args["_market"])) unset($args["_market"]);
+      if(isSet($args["_currency"])) {
+        $args["currency"] = trim($args["_currency"]);
+        if($args["currency"] == "") unset($args["currency"]);
+        unset($args["_currency"]);
+      }
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
+
       return $this->send("account/getwithdrawalhistory" , $args);
     }
 
     public function getDepositHistory($args = null) {
+      if(isSet($args["_market"])) unset($args["_market"]);
+      if(isSet($args["_currency"])) {
+        $args["currency"] = trim($args["_currency"]);
+        if($args["currency"] == "") unset($args["currency"]);
+        unset($args["_currency"]);
+      }
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
       return $this->send("account/getdeposithistory" , $args);
     }

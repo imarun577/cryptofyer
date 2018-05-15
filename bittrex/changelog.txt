@@ -1,3 +1,7 @@
+v0.17
+- update withdraw()
+- code reformatting
+
 v0.16
 - update sell()
 - update buy()
