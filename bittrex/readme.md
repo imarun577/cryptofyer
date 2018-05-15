@@ -1,4 +1,4 @@
-CryptoFyer Bittrex v0.17
+CryptoFyer Bittrex v0.18
 ==============
 
 PHP client api for Bittrex api v1.1
@@ -72,17 +72,10 @@ $bittrex  = new BittrexApi($apiKey , $apiSecret );
 $result = $bittrex->getBalance(array("currency" => "BTC"));
 ```
 
-Example web files
-----
-I've prepared some example files to get you started in the examples folder.
-* portfolio.php (list all current currency you with balance > 0)
-* holdings.php (transactions and finding breakeven rate on a currency)
-* deposits.php (overview of your total deposits)
 
 Example CLI files
 ----
 I've prepared some example files to get you started in the examples folder to run from your command line.
-* cli_watch.php (command line script to watch a currency)
 * cli_console.php (command line console like to sell/buy/cancel orders)
 
 
