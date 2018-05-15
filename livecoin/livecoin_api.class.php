@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    1.8
+  * @version    1.9
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "1";
-    private $_version_minor  = "8";
+    private $_version_minor  = "9";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -241,9 +241,15 @@
     }
 
     public function cancel($args = null) {
-      if(!isSet($args["orderid"])) return $this->getErrorReturn("required parameter: orderid");
-      $args["orderId"]  = $args["orderid"];
-      unset($args["orderid"]);
+
+      if(isSet($args["orderid"])) {
+        $args["order_id"] = $args["orderid"];
+        unset($args["orderid"]);
+      }
+
+      if(!isSet($args["order_id"])) return $this->getErrorReturn("required parameter: order_id");
+      $args["orderId"]  = $args["order_id"];
+      unset($args["order_id"]);
 
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
         $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
@@ -259,70 +265,59 @@
 
       if($resultOBJ["success"]) {
         $result = $resultOBJ["result"];
-        return $result;
-      } else {
-        return $resultOBJ;
+        $resultOBJ["result"]  = $result;
       }
+      return $resultOBJ;
+    }
+
+    // place a buy or sell order
+    public function order($args = null , $side = "") {
+
+      if(empty($side)) return $this->getErrorReturn("required parameter: side");
+      $method = "";
+      if($side == "buy") {
+        $method = "/exchange/buylimit";
+      }
+      if($side == "sell") {
+        $method = "/exchange/selllimit";
+      }
+      if(empty($method)) return $this->getErrorReturn("incorrect side");
+
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+        unset($args["_market"]);
+        unset($args["_currency"]);
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+
+      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
+      $args["quantity"] = $args["amount"];
+      unset($args["amount"]);
+
+      if(!isSet($args["price"])) return $this->getErrorReturn("required parameter: price");
+
+      $args["currencyPair"] = $args["market"];
+
+      $resultOBJ  = $this->send( $method, $args , true , "POST");
+
+      if($resultOBJ["success"]) {
+
+        $result = $resultOBJ["result"];
+        $result["orderid"]  = $result["orderId"];
+        $resultOBJ["result"]  = $result;
+
+      }
+      return $resultOBJ;
     }
 
     // place buy order
     public function buy($args = null) {
-      if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
-        unset($args["_market"]);
-        unset($args["_currency"]);
-      }
-      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
-
-      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
-      $args["quantity"] = $args["amount"];
-      unset($args["amount"]);
-
-      if(!isSet($args["price"])) return $this->getErrorReturn("required parameter: price");
-
-      $method = "/exchange/buylimit";
-      $args["currencyPair"] = $args["market"];
-
-      $resultOBJ  = $this->send( $method, $args , true , "POST");
-
-      if($resultOBJ["success"]) {
-
-        $result = $resultOBJ["result"];
-        $result["orderid"]  = $result["orderId"];
-        $resultOBJ["result"]  = $result;
-
-      }
-      return $resultOBJ;
+      return $this->order($args , "buy");
     }
 
     // place sell order
     public function sell($args = null) {
-      if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
-        unset($args["_market"]);
-        unset($args["_currency"]);
-      }
-      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
-
-      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
-      $args["quantity"] = $args["amount"];
-      unset($args["amount"]);
-
-      if(!isSet($args["price"])) return $this->getErrorReturn("required parameter: price");
-
-      $method = "/exchange/selllimit";
-      $args["currencyPair"] = $args["market"];
-
-      $resultOBJ  = $this->send( $method, $args , true , "POST");
-
-      if($resultOBJ["success"]) {
-
-        $result = $resultOBJ["result"];
-        $result["orderid"]  = $result["orderId"];
-        $resultOBJ["result"]  = $result;
-
-      }
-      return $resultOBJ;
+      return $this->order($args , "sell");
     }
 
     // get open orders
@@ -344,8 +339,16 @@
         $result = array();
         if($resultOBJ["result"]["data"] != null) {
           foreach($resultOBJ["result"]["data"] as $item) {
-            $item["orderid"]  = $item["id"];
-            $result[] = $item;
+            if($item["orderStatus"] == "OPEN") {
+              $item["order_id"]  = $item["orderid"]  = $item["id"];
+
+              $item["order_type"]       = $item["type"];
+
+              $item['amount']           = $item["quantity"];
+              $item['amount_remaining'] = $item["remainingQuantity"];
+
+              $result[] = $item;
+            }
           }
         }
         $resultOBJ["result"]  = $result;

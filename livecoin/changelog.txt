@@ -1,3 +1,7 @@
+v.1.9
+- buy() and sell() using order() function
+- implemented cancel()
+
 v1.8
 - update withdraw()
 

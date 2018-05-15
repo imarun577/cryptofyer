@@ -1,4 +1,4 @@
-CryptoFyer LiveCoin v1.8
+CryptoFyer LiveCoin v1.9
 ==============
 
 PHP client api for LiveCoin
