@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BinanceApi
   * @author     Fransjo Leihitu
-  * @version    0.11
+  * @version    0.12
   *
   * API Documentation :
   */
@@ -20,7 +20,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "11";
+    private $_version_minor  = "12";
 
     private $info = [];
 
@@ -124,8 +124,11 @@
       // /api/v3/ticker/price
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
         $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+        unset($args["_market"]);
+        unset($args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      if(isSet($args["depth"])) unset($args["depth"]);
 
       $resultOBJ  = $this->send("/api/v3/ticker/bookTicker" , $args, false);
 
@@ -137,9 +140,9 @@
           $result["BidQty"]   = $result["bidQty"];
 
           $result["Ask"]      = $result["askPrice"];
-          $result["AskQty"]      = $result["askQty"];
+          $result["AskQty"]   = $result["askQty"];
 
-          $result["_raw"]      = $resultOBJ["result"];
+          $result["_raw"]     = $resultOBJ["result"];
 
           return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result);
         } else {

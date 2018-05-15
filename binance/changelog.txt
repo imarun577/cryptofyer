@@ -1,3 +1,6 @@
+v0.12
+- update getOrderbook()
+
 v0.11
 - update withdraw()
 
