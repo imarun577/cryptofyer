@@ -107,7 +107,7 @@
               $totalValue = $units * $rate;
               $totalValue  = number_format($totalValue, 8, '.', '');
               fwrite(STDOUT, "Total value: $totalValue\n");
-              if($sellOBJ = $exchange->sell(array("market" => $market,"amount"=>$units,"rate"=>$rate))) {
+              if($sellOBJ = $exchange->sell(array("_market" => $_market, "_currency" => $_currency , "amount"=>$units,"price"=>$rate))) {
                 if($sellOBJ["success"] == true) {
                   fwrite(STDOUT, "[$market] Placed sell order: $units units at rate $rate ($totalValue)\n");
                   fwrite(STDOUT, "[$market] Returning to main menu\n");
@@ -149,7 +149,7 @@
               $totalValue = $units * $rate;
               $totalValue  = number_format($totalValue, 8, '.', '');
               fwrite(STDOUT, "Total value $totalValue\n");
-              if($sellOBJ = $exchange->buy(array("market" => $market,"amount"=>$units,"rate"=>$rate))) {
+              if($sellOBJ = $exchange->buy(array("_market" => $_market, "_currency" => $_currency , "amount"=>$units,"price"=>$rate))) {
                 if($sellOBJ["success"] == true) {
                   fwrite(STDOUT, "[$market] Placed buy order: $units units at rate $rate ($totalValue)\n");
                   fwrite(STDOUT, "[$market] Returning to main menu\n");
