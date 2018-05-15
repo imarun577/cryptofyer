@@ -246,7 +246,7 @@ Required parameters
 | Name | Type | Remarks |
 | --- | --- | --- |
 | market | string | Marketpair |
-| orderid | long | the unique orderid |
+| order_id | long | the unique order_id |
 
 for example :
 
@@ -254,7 +254,7 @@ for example :
 $result = $exchange->cancel(
   array(
     "market" => "ETH-BTC" ,
-    "orderid" => 29011978
+    "order_id" => 29011978
   )
 );
 
@@ -268,7 +268,7 @@ $result = $exchange->cancel(
   array(
     "_market" => "BTC" ,
     "_currency" => "ETH",
-    "orderid" => 29011978
+    "order_id" => 29011978
   )
 );
 
