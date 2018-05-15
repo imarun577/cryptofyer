@@ -55,3 +55,9 @@ Private API functions
 |  | buy() |  | Not ready yet |
 |  | sell() |  | Not ready yet |
 |  | cancel() |  | Not ready yet |
+
+TODO
+----
+
+Quirks
+----

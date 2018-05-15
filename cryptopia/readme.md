@@ -61,3 +61,10 @@ Private API functions
 | SubmitTrade | sell() |  |  |
 | GetTransactions | getTransactions() |  |  |
 | GetTradeHistory | getTradeHistory() |  |  |
+
+
+TODO
+----
+
+Quirks
+----

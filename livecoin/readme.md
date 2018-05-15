@@ -63,3 +63,10 @@ Private API functions
 | exchange/selllimit | sell() |  |  |
 | exchange/cancellimit | cancel() |  |  |
 | /payment/out/coin | withdraw() |  |  |
+
+
+TODO
+----
+
+Quirks
+----

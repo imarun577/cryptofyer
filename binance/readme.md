@@ -53,3 +53,10 @@ Private API functions
 | api/v3/order| buy() |  |  |
 | api/v3/order| sell() |  |  |
 | wapi/v3/withdraw.html | withdraw() |  |  |
+
+
+TODO
+----
+
+Quirks
+----

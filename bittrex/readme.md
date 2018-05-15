@@ -84,3 +84,10 @@ Example CLI files
 I've prepared some example files to get you started in the examples folder to run from your command line.
 * cli_watch.php (command line script to watch a currency)
 * cli_console.php (command line console like to sell/buy/cancel orders)
+
+
+TODO
+----
+
+Quirks
+----
