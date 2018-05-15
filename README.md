@@ -1,4 +1,4 @@
-CryptoFyer 0.5
+CryptoFyer 0.6
 ==============
 
 An unified framework to connect to different Crypto Exchange websites.
@@ -99,8 +99,10 @@ Unified market arguments
 Some functions requires the market string literal as argument. For example Bittrex's ticker:
 
 ```php
-$result = $exchange->getTicker(array(
-  "market" => "BTC-ETH")
+$result = $exchange->getTicker(
+  array(
+    "market" => "BTC-ETH"
+  )
 );
 
 debug($result);
@@ -109,8 +111,10 @@ debug($result);
 or Cryptopia's ticker :
 
 ```php
-$result = $exchange->getTicker(array(
-  "market" => "ETH-BTC")
+$result = $exchange->getTicker(
+  array(
+    "market" => "ETH-BTC"
+  )
 );
 
 debug($result);
@@ -129,6 +133,30 @@ debug($result);
 ```
 The function will resolve the market pair with the `getMarketPair()` function.
 
+
+Return values
+----
+Normalizing the parameters is one of the goals of this project. But also the return values.
+A typical return structure would be
+
+```php
+  array(
+    "success" => true,
+    "message" => "A custom string",
+    "result" => array(
+
+    )
+  )
+```
+
+| Key | Type | Remarks |
+| --- | --- | --- |
+| success | boolean | |
+| message | string | |
+| result | mixed | Payload of the api call |
+
+So when success holds true, the API call was a success.
+
 Alias currency
 ----
 Over time, currency's change names. But the exchanges don't always update their tickers. In order to compensate, I created the ``` getCurrencyAlias() ``` function. The function will lookup the private array ``` $currencyAlias ``` . This is an associated array with the new currency name and aliased to the old currency name.
@@ -146,10 +174,12 @@ Required parameters
 for example :
 
 ```php
-$result = $exchange->buy(array(
-  "market" => "ETH-BTC" ,
-  "price" => 0.00001 ,
-  "amount" => 1)
+$result = $exchange->buy(
+  array(
+    "market" => "ETH-BTC" ,
+    "price" => 0.00001 ,
+    "amount" => 1
+  )
 );
 
 debug($result);
@@ -158,11 +188,13 @@ debug($result);
 or you can use the (preferred) way using the ```_market``` and ```_currency``` method.
 
 ```php
-$result = $exchange->buy(array(
-  "_market" => "BTC" ,
-  "_currency" => "ETH",
-  "price" => 0.00001 ,
-  "amount" => 1)
+$result = $exchange->buy(
+  array(
+    "_market" => "BTC" ,
+    "_currency" => "ETH",
+    "price" => 0.00001 ,
+    "amount" => 1
+  )
 );
 
 debug($result);
@@ -181,10 +213,12 @@ Required parameters
 for example :
 
 ```php
-$result = $exchange->sell(array(
-  "market" => "ETH-BTC" ,
-  "price" => 0.00001 ,
-  "amount" => 1)
+$result = $exchange->sell(
+  array(
+    "market" => "ETH-BTC" ,
+    "price" => 0.00001 ,
+    "amount" => 1
+  )
 );
 
 debug($result);
@@ -193,11 +227,13 @@ debug($result);
 or you can use the (preferred) way using the ```_market``` and ```_currency``` method.
 
 ```php
-$result = $exchange->sell(array(
-  "_market" => "BTC" ,
-  "_currency" => "ETH",
-  "price" => 0.00001 ,
-  "amount" => 1)
+$result = $exchange->sell(
+  array(
+    "_market" => "BTC" ,
+    "_currency" => "ETH",
+    "price" => 0.00001 ,
+    "amount" => 1
+  )
 );
 
 debug($result);
@@ -215,9 +251,11 @@ Required parameters
 for example :
 
 ```php
-$result = $exchange->cancel(array(
-  "market" => "ETH-BTC" ,
-  "orderid" => 29011978
+$result = $exchange->cancel(
+  array(
+    "market" => "ETH-BTC" ,
+    "orderid" => 29011978
+  )
 );
 
 debug($result);
@@ -226,10 +264,12 @@ debug($result);
 or you can use the (preferred) way using the ```_market``` and ```_currency``` method.
 
 ```php
-$result = $exchange->cancel(array(
-  "_market" => "BTC" ,
-  "_currency" => "ETH",
-  "orderid" => 29011978
+$result = $exchange->cancel(
+  array(
+    "_market" => "BTC" ,
+    "_currency" => "ETH",
+    "orderid" => 29011978
+  )
 );
 
 debug($result);

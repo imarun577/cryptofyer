@@ -5,7 +5,7 @@
   * @package    cryptofyer
   * @class CryptoExchange
   * @author     Fransjo Leihitu
-  * @version    0.5
+  * @version    0.6
   *
   */
   class CryptoExchange {
@@ -16,7 +16,7 @@
     private $exchangeUrl   = null;
 
     private $version_major  = "0";
-    private $version_minor  = "5";
+    private $version_minor  = "6";
     private $version  = "";
 
     private $currencyAlias  = array();
@@ -37,6 +37,10 @@
 
     public function transfer($args = null) {
       return $this->getErrorReturn("please implement the transfer() function");
+    }
+
+    public function getBalances($args = null) {
+      return $this->getBalances("please implement the transfer() function");
     }
 
     public function setVersion($major = "0" , $minor = "0") {
