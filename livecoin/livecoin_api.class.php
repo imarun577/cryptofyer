@@ -174,8 +174,8 @@
           $result             = $resultOBJ["result"];
 
           $result["Last"]     = $result["last"];
-          $result["Bid"]      = $result["best_bid"];
-          $result["Ask"]      = $result["best_ask"];
+          $result["bid_price"]      = $result["best_bid"];
+          $result["ask_price"]      = $result["best_ask"];
           $result["_raw"]     = $resultOBJ["result"];
 
           return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result);
@@ -427,10 +427,10 @@
           "result"  => array()
         );
 
-        $result["result"]["Bid"]  = $resultOBJ["result"]["bids"][0][0];
-        $result["result"]["BidQty"]  = $resultOBJ["result"]["bids"][0][1];
-        $result["result"]["Ask"]  = $resultOBJ["result"]["asks"][0][0];
-        $result["result"]["AskQty"]  = $resultOBJ["result"]["asks"][0][1];
+        $result["result"]["bid_price"]  = $resultOBJ["result"]["bids"][0][0];
+        $result["result"]["bid_amount"]  = $resultOBJ["result"]["bids"][0][1];
+        $result["result"]["ask_price"]  = $resultOBJ["result"]["asks"][0][0];
+        $result["result"]["ask_amount"]  = $resultOBJ["result"]["asks"][0][1];
 
         $result["result"]["_raw"] = $resultOBJ["result"];
         return $result;

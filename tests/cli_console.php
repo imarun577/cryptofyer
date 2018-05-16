@@ -217,7 +217,7 @@ do {
 
           if($result != null && isSet($result["success"]) && $result["success"]==true) {
 
-            $bid  = number_format($result["result"]["Bid"], 8, '.', '');
+            $bid  = number_format($result["result"]["bid_price"], 8, '.', '');
             //fwrite(STDOUT, "BID : $bid\n");
             fwrite(STDOUT, "$bid\t|");
 
@@ -226,7 +226,7 @@ do {
               $bidExhange = $key;
             }
 
-            $ask  = number_format($result["result"]["Ask"], 8, '.', '');
+            $ask  = number_format($result["result"]["ask_price"], 8, '.', '');
             fwrite(STDOUT, "$ask\t|");
 
             $askTMP[$key] = $ask;
@@ -289,8 +289,8 @@ function getTicker($exchange,$market) {
   if(!empty($tickerOBJ)) {
     if($tickerOBJ["success"]  == true) {
       $last = number_format($tickerOBJ["result"]["Last"], 8, '.', '');
-      $bid = number_format($tickerOBJ["result"]["Bid"], 8, '.', '');
-      $ask = number_format($tickerOBJ["result"]["Ask"], 8, '.', '');
+      $bid = number_format($tickerOBJ["result"]["bid_price"], 8, '.', '');
+      $ask = number_format($tickerOBJ["result"]["ask_price"], 8, '.', '');
       fwrite(STDOUT, "Last\t: $last\n");
       fwrite(STDOUT, "Bid\t: $bid\n");
       fwrite(STDOUT, "Ask\t: $ask\n");

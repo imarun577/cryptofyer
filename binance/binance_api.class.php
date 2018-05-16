@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BinanceApi
   * @author     Fransjo Leihitu
-  * @version    0.13
+  * @version    0.14
   *
   * API Documentation :
   */
@@ -20,7 +20,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "13";
+    private $_version_minor  = "14";
 
     private $info = [];
 
@@ -140,13 +140,13 @@
         if(isSet($resultOBJ["result"]) && !empty($resultOBJ["result"])) {
           $result             = $resultOBJ["result"];
 
-          $result["Bid"]      = $result["bidPrice"];
-          $result["BidQty"]   = $result["bidQty"];
+          $result["bid_price"]    = $result["bidPrice"];
+          $result["bid_amount"]   = $result["bidQty"];
 
-          $result["Ask"]      = $result["askPrice"];
-          $result["AskQty"]   = $result["askQty"];
+          $result["ask_price"]    = $result["askPrice"];
+          $result["ask_amount"]   = $result["askQty"];
 
-          $result["_raw"]     = $resultOBJ["result"];
+          $result["_raw"]         = $resultOBJ["result"];
 
           return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result);
         } else {
@@ -174,10 +174,10 @@
 
           $orderbook  = $this->getOrderbookTicker($args);
 
-          $result["Last"]     = $result["price"];
-          $result["Bid"]      = $orderbook["result"]["Bid"];
-          $result["Ask"]      = $orderbook["result"]["Ask"];
-          $result["_raw"]      = $resultOBJ["result"];
+          $result["Last"]           = $result["price"];
+          $result["bid_price"]      = $orderbook["result"]["bid_price"];
+          $result["ask_price"]      = $orderbook["result"]["ask_price"];
+          $result["_raw"]           = $resultOBJ["result"];
           $result["_raw"]["orderbook"]  =  $orderbook["result"]["_raw"];
 
           return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result);

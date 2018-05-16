@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BittrexApi
   * @author     Fransjo Leihitu
-  * @version    0.18
+  * @version    0.19
   *
   * API Documentation : https://bittrex.com/home/api
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "18";
+    private $_version_minor  = "19";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -102,6 +102,9 @@
       $resultOBJ  = $this->send("public/getmarketsummary" , $args, false);
       if($resultOBJ["success"]) {
         $result = $resultOBJ["result"];
+        $result[0]["bid_price"] = $result[0]["Bid"];
+        $result[0]["ask_price"] = $result[0]["Ask"];
+        $result[0]["price"] = $result[0]["Last"];
         $resultOBJ["result"]  = $result[0];
       }
       return $resultOBJ;
@@ -112,7 +115,15 @@
         $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
-      return $this->send("public/getmarketsummary" , $args , false);
+      $resultOBJ  = $this->send("public/getmarketsummary" , $args , false);
+      if($resultOBJ["success"] == true) {
+        $result = $resultOBJ["result"][0];
+        $result["bid_price"] = $result["Bid"];
+        $result["ask_price"] = $result["Ask"];
+        $result["price"]      = $result["Last"];
+        $resultOBJ["result"] = $result;
+      }
+      return $resultOBJ;
     }
 
     public function getOrderbook($args = null) {
@@ -136,11 +147,11 @@
         $resultOBJ["result"]["buy"] = $raw["buy"];
         $resultOBJ["result"]["sell"] =$raw["sell"];
 
-        $resultOBJ["result"]["Bid"] =  $raw["buy"][0]["Rate"];
-        $resultOBJ["result"]["BidQty"] =  $raw["buy"][0]["Quantity"];
+        $resultOBJ["result"]["bid_price"] =  $raw["buy"][0]["Rate"];
+        $resultOBJ["result"]["bid_amount"] =  $raw["buy"][0]["Quantity"];
 
-        $resultOBJ["result"]["Ask"] =  $raw["sell"][0]["Rate"];
-        $resultOBJ["result"]["AskQty"] = $raw["sell"][0]["Quantity"];
+        $resultOBJ["result"]["ask_price"] =  $raw["sell"][0]["Rate"];
+        $resultOBJ["result"]["ask_amount"] = $raw["sell"][0]["Quantity"];
       }
       return $resultOBJ;
     }
@@ -150,7 +161,18 @@
         $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
-      return $this->send("public/getmarkethistory" , $args , false);
+      $resultOBJ  = $this->send("public/getmarkethistory" , $args , false);
+      if($resultOBJ["success"] == true) {
+        $items  = $resultOBJ["result"];
+        $return = array();
+        foreach($items as $item) {
+          $item["price"]    = $item["Price"];
+          $item["amount"]   = $item["Quantity"];
+          $return[] = $item;
+        }
+        $resultOBJ["result"]  = $return;
+      }
+      return $resultOBJ;
     }
 
     public function getMarketSummaries() {
@@ -255,7 +277,12 @@
       }
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
 
-      return $this->send("account/getbalance" , $args);
+      $returnOBJ  = $this->send("account/getbalance" , $args);
+      if($returnOBJ["success"] == true) {
+        $result = $returnOBJ["result"];
+        $returnOBJ["result"]  = $result;
+      }
+      return $returnOBJ;
     }
 
     public function getDepositAddress($args = null) {
@@ -268,7 +295,13 @@
       }
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
 
-      return $this->send("account/getdepositaddress" , $args);
+      $returnOBJ  = $this->send("account/getdepositaddress" , $args);
+      if($returnOBJ["success"] == true) {
+        $result = $returnOBJ["result"];
+        $result["address"] = $result["Address"];
+        $returnOBJ["result"]  = $result;
+      }
+      return $returnOBJ;
     }
 
 
@@ -316,7 +349,22 @@
         $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
-      return $this->send("account/getorderhistory" , $args);
+
+      $resultOBJ  =  $this->send("account/getorderhistory" , $args);
+      if($resultOBJ["success"] == true) {
+        $result = $resultOBJ["result"];
+
+        $items  = array();
+        foreach($result as $item) {
+          $item["order_id"] = $item["OrderUuid"];
+          $item["price"]    = $item["Price"];
+          $item["amount"]   = $item["Quantity"];
+          $items[]  = $item;
+        }
+
+        $resultOBJ["result"]  = $items;
+      }
+      return $resultOBJ;
     }
 
     public function getWithdrawalHistory($args = null) {
@@ -329,7 +377,19 @@
       }
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
 
-      return $this->send("account/getwithdrawalhistory" , $args);
+      $resultOBJ  =  $this->send("account/getwithdrawalhistory" , $args);
+      if($resultOBJ["success"] == true) {
+        $result = $resultOBJ["result"];
+
+        $items  = array();
+        foreach($result as $item) {
+          $item["amount"]   = $item["Amount"];
+          $items[]  = $item;
+        }
+
+        $resultOBJ["result"]  = $items;
+      }
+      return $resultOBJ;
     }
 
     public function getDepositHistory($args = null) {
@@ -340,7 +400,19 @@
         unset($args["_currency"]);
       }
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
-      return $this->send("account/getdeposithistory" , $args);
+      $resultOBJ  = $this->send("account/getdeposithistory" , $args);
+      if($resultOBJ["success"] == true) {
+        $result = $resultOBJ["result"];
+
+        $items  = array();
+        foreach($result as $item) {
+          $item["amount"]   = $item["Amount"];
+          $items[]  = $item;
+        }
+
+        $resultOBJ["result"]  = $items;
+      }
+      return $resultOBJ;
     }
 
     /* ------ END account api methodes ------ */

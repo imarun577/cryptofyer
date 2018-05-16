@@ -1,3 +1,6 @@
+v0.14
+- refactoring
+
 v0.13
 - implemented getOrders()
 - buy() and sell() using now order() function

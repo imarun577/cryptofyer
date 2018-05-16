@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.23
+  * @version    0.24
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "23";
+    private $_version_minor  = "24";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -106,7 +106,15 @@
         unset($args["_currency"]);
       }
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
-      return $this->send("GetDepositAddress" , $args);
+      $returnOBJ = $this->send("GetDepositAddress" , $args);
+      if($returnOBJ["success"] == true) {
+        $result = $returnOBJ["result"];
+
+        $result["address"]  = $result["Address"];
+
+        $returnOBJ["result"]  = $result;
+      }
+      return $returnOBJ;
     }
 
     public function getMarkets($args  = null) {
@@ -114,19 +122,19 @@
       $market = isSet($args["market"]) ? "/" . $args["market"] : "";
       $hours  = isSet($args["hours"]) ? "/" . $args["hours"] : "";
 
-      $response = $this->send("GetMarkets".$market.$hours , null , false);
+      $responseOBJ = $this->send("GetMarkets".$market.$hours , null , false);
 
-      if($response["success"] == true) {
+      if($responseOBJ["success"] == true) {
         $result = array();
-        foreach($response["result"] as $item) {
-          $item["Last"]     = $item["LastPrice"];
-          $item["Bid"]      = $item["BidPrice"];
-          $item["Ask"]      = $item["AskPrice"];
+        foreach($responseOBJ["result"] as $item) {
+          $item["price"]     = $item["LastPrice"];
+          $item["bid_price"]      = $item["BidPrice"];
+          $item["ask_price"]      = $item["AskPrice"];
           $result[] = $item;
         }
-        $response["result"] = $result;
+        $responseOBJ["result"] = $result;
       }
-      return $response;
+      return $responseOBJ;
     }
 
     public function getTradePairs($args = null){
@@ -144,19 +152,19 @@
           unset($args["currency"]);
         }
       }
+
       $balanceOBJ = $this->send("GetBalance" , $args);
       if($balanceOBJ["success"] == true) {
         $result = array();
         foreach($balanceOBJ["result"] as $item) {
           $item["Balance"]  = $item["Total"];
           $item["Currency"] = $item["Symbol"];
+          $item["address"]  = $item["Address"];
           $result[] = $item;
         }
         $balanceOBJ["result"] = $result;
-        return $balanceOBJ;
-      } else {
-        return $balanceOBJ;
       }
+      return $balanceOBJ;
     }
 
     public function getOrder($args  = null) {
@@ -284,15 +292,15 @@
 
       $hours  = isSet($args["hours"]) ? "/" . $args["hours"] : "";
 
-      $response = $this->send("GetMarket/".$args["market"].$hours , null , false);
-      if(isSet($response["result"]) && !empty($response["result"])) {
-        $result             = $response["result"];
-        $result["Last"]     = $result["LastPrice"];
-        $result["Bid"]      = $result["BidPrice"];
-        $result["Ask"]      = $result["AskPrice"];
-        $response["result"] = $result;
+      $responseOBJ = $this->send("GetMarket/".$args["market"].$hours , null , false);
+      if(isSet($responseOBJ["result"]) && !empty($responseOBJ["result"])) {
+        $result             = $responseOBJ["result"];
+        $result["price"]     = $result["LastPrice"];
+        $result["bid_price"]      = $result["BidPrice"];
+        $result["ask_price"]      = $result["AskPrice"];
+        $responseOBJ["result"] = $result;
       }
-      return $response;
+      return $responseOBJ;
     }
 
     public function getMarketOrders($args = null) {
@@ -324,11 +332,11 @@
         $resultOBJ["result"]["buy"] = $raw["Buy"];
         $resultOBJ["result"]["sell"] =$raw["Sell"];
 
-        $resultOBJ["result"]["Bid"] =  $raw["Buy"][0]["Price"];
-        $resultOBJ["result"]["BidQty"] =  $raw["Buy"][0]["Volume"];
+        $resultOBJ["result"]["bid_price"] =  $raw["Buy"][0]["Price"];
+        $resultOBJ["result"]["bid_amount"] =  $raw["Buy"][0]["Volume"];
 
-        $resultOBJ["result"]["Ask"] =  $raw["Sell"][0]["Price"];
-        $resultOBJ["result"]["AskQty"] = $raw["Sell"][0]["Volume"];
+        $resultOBJ["result"]["ask_price"] =  $raw["Sell"][0]["Price"];
+        $resultOBJ["result"]["ask_amount"] = $raw["Sell"][0]["Volume"];
       }
 
       return $resultOBJ;
@@ -361,7 +369,18 @@
       //unset($args["market"]);
       $method = "GetTradeHistory";
 
-      return $this->send($method, $args , true);
+      $returnOBJ  = $this->send($method, $args , true);
+      if($returnOBJ["success"] == true) {
+        $result = $returnOBJ["result"];
+        $items  = array();
+        foreach($result as $item) {
+          $item["amount"] = $item["Amount"];
+          $item["price"] = $item["Price"];
+          $items[]  = $item;
+        }
+        $returnOBJ["result"]  = $items;
+      }
+      return $returnOBJ;
     }
 
     public function getMarketHistory($args = null) {
@@ -378,7 +397,18 @@
       $method = "GetMarketHistory/".$args["market"].$hours;
       unset($args["market"]);
 
-      return $this->send($method, $args , false);
+      $returnOBJ  = $this->send($method, $args , false);
+      if($returnOBJ["success"] == true) {
+        $result = $returnOBJ["result"];
+        $items  = array();
+        foreach($result as $item) {
+          $item["amount"] = $item["Amount"];
+          $item["price"] = $item["Price"];
+          $items[]  = $item;
+        }
+        $returnOBJ["result"]  = $items;
+      }
+      return $returnOBJ;
     }
 
   }

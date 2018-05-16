@@ -116,10 +116,10 @@
         if(isSet($resultOBJ["result"]) && !empty($resultOBJ["result"])) {
           $result             = $resultOBJ["result"]["data"];
 
-          $result["Last"]     = $result["lastDealPrice"];
-          $result["Bid"]      = $result["buy"];
-          $result["Ask"]      = $result["sell"];
-          $result["_raw"]     = $resultOBJ["result"];
+          $result["price"]      = $result["lastDealPrice"];
+          $result["bid_price"]  = $result["buy"];
+          $result["ask_price"]  = $result["sell"];
+          $result["_raw"]       = $resultOBJ["result"];
 
           return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result);
         }
@@ -188,11 +188,11 @@
           $resultOBJ["result"]["buy"]   = $raw["data"]["BUY"];
           $resultOBJ["result"]["sell"]  = $raw["data"]["SELL"];
 
-          $resultOBJ["result"]["Bid"]     =  $raw["data"]["BUY"][0][1];
-          $resultOBJ["result"]["BidQty"]  =  $raw["data"]["BUY"][0][2];
+          $resultOBJ["result"]["bid_price"]     =  $raw["data"]["BUY"][0][1];
+          $resultOBJ["result"]["bid_amount"]  =  $raw["data"]["BUY"][0][2];
 
-          $resultOBJ["result"]["Ask"]     = $raw["data"]["SELL"][0][1];
-          $resultOBJ["result"]["AskQty"]  = $raw["data"]["SELL"][0][2];
+          $resultOBJ["result"]["ask_price"]     = $raw["data"]["SELL"][0][1];
+          $resultOBJ["result"]["ask_amount"]  = $raw["data"]["SELL"][0][2];
         }
       }
       return $resultOBJ;

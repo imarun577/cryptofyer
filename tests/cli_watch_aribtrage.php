@@ -94,14 +94,14 @@
         $result = $exchange->getTicker(array("_market" => $_market , "_currency" => $_currency));
 
         if($result != null && isSet($result["success"]) && $result["success"]==true) {
-          $bid  = number_format($result["result"]["Bid"], 8, '.', '');
+          $bid  = number_format($result["result"]["bid_price"], 8, '.', '');
 
           if($bid > $bidHigh) {
             $bidHigh  = $bid;
             $bidExhange = $key;
           }
 
-          $ask  = number_format($result["result"]["Ask"], 8, '.', '');
+          $ask  = number_format($result["result"]["ask_price"], 8, '.', '');
           $askTMP[$key] = $ask;
 
         }
@@ -134,8 +134,8 @@
       if($resultOrderBookSell = $exchangesInstances[$bidExhange]->getOrderbook(
         array("_market" => $_market , "_currency" => $_currency)
       )) {
-        if($resultOrderBookSell["result"]["BidQty"]) {
-          $qtyToSell  = $resultOrderBookSell["result"]["BidQty"];
+        if($resultOrderBookSell["result"]["bid_amount"]) {
+          $qtyToSell  = $resultOrderBookSell["result"]["bid_amount"];
         }
       }
 
@@ -143,8 +143,8 @@
       if($resultOrderBookBuy = $exchangesInstances[$askExchange]->getOrderbook(
         array("_market" => $_market , "_currency" => $_currency)
       )) {
-        if($resultOrderBookBuy["result"]["AskQty"]) {
-          $qtyToBuy  = $resultOrderBookBuy["result"]["AskQty"];
+        if($resultOrderBookBuy["result"]["ask_amount"]) {
+          $qtyToBuy  = $resultOrderBookBuy["result"]["ask_amount"];
         }
       }
 

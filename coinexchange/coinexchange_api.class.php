@@ -84,8 +84,8 @@
       if($resultOBJ["success"] == true) {
         foreach($resultOBJ["result"] as $result) {
           $result["Last"] = number_format($result["LastPrice"], 8, '.', '');
-          $result["Bid"] = number_format($result["BidPrice"], 8, '.', '');
-          $result["Ask"] = number_format($result["AskPrice"], 8, '.', '');
+          $result["bid_price"] = number_format($result["BidPrice"], 8, '.', '');
+          $result["ask_price"] = number_format($result["AskPrice"], 8, '.', '');
         }
         $resultOBJ["result"]  = $result;
         return $resultOBJ;
@@ -156,8 +156,8 @@
         $result = $resultOBJ["result"];
         $raw  = $resultOBJ["result"];
         $result["Last"] = number_format($result["LastPrice"], 8, '.', '');
-        $result["Bid"] = number_format($result["BidPrice"], 8, '.', '');
-        $result["Ask"] = number_format($result["AskPrice"], 8, '.', '');
+        $result["bid_price"] = number_format($result["BidPrice"], 8, '.', '');
+        $result["ask_price"] = number_format($result["AskPrice"], 8, '.', '');
 
         $resultOBJ["result"]  = $result;
         $resultOBJ["result"]["_raw"]  =$raw;
@@ -198,11 +198,11 @@
         $resultOBJ["result"]["buy"] = $raw["BuyOrders"];
         $resultOBJ["result"]["sell"] =$raw["SellOrders"];
 
-        $resultOBJ["result"]["Bid"] =  $raw["BuyOrders"][0]["Price"];
-        $resultOBJ["result"]["BidQty"] =  $raw["BuyOrders"][0]["Quantity"];
+        $resultOBJ["result"]["bid_price"] =  $raw["BuyOrders"][0]["Price"];
+        $resultOBJ["result"]["bid_amount"] =  $raw["BuyOrders"][0]["Quantity"];
 
-        $resultOBJ["result"]["Ask"] =  $raw["SellOrders"][0]["Price"];
-        $resultOBJ["result"]["AskQty"] = $raw["SellOrders"][0]["Quantity"];
+        $resultOBJ["result"]["ask_price"] =  $raw["SellOrders"][0]["Price"];
+        $resultOBJ["result"]["ask_amount"] = $raw["SellOrders"][0]["Quantity"];
 
         return $resultOBJ;
       }

@@ -345,8 +345,8 @@
         if(!empty($tickerOBJ)) {
           if($tickerOBJ["success"]  == true) {
             $last = number_format($tickerOBJ["result"]["Last"], 8, '.', '');
-            $bid = number_format($tickerOBJ["result"]["Bid"], 8, '.', '');
-            $ask = number_format($tickerOBJ["result"]["Ask"], 8, '.', '');
+            $bid = number_format($tickerOBJ["result"]["bid_price"], 8, '.', '');
+            $ask = number_format($tickerOBJ["result"]["ask_price"], 8, '.', '');
             fwrite(STDOUT, "Last = $last\n");
             fwrite(STDOUT, "Bid = $bid\n");
             fwrite(STDOUT, "Ask = $ask\n");
