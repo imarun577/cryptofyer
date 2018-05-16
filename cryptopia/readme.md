@@ -1,4 +1,4 @@
-CryptoFyer Cryptopia v0.25
+CryptoFyer Cryptopia v0.26
 ==============
 
 PHP client api for Cryptopia
@@ -61,6 +61,7 @@ Private API functions
 | SubmitTrade | sell() |  |  |
 | GetTransactions | getTransactions() |  |  |
 | GetTradeHistory | getTradeHistory() |  |  |
+| SubmitWithdraw | withdraw() |  |  |
 
 
 TODO

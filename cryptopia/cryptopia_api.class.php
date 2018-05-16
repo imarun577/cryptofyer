@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.25
+  * @version    0.26
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "25";
+    private $_version_minor  = "26";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -393,6 +393,43 @@
         $returnOBJ["result"]  = $items;
       }
       return $returnOBJ;
+    }
+
+    public function withdraw($args = null) {
+      if(isSet($args["_market"])) unset($args["_market"]);
+
+      if(!isSet($args["currency"])) {
+        $args["currency"] = "";
+        if(isSet($args["_currency"])) {
+          $args["currency"] = $args["_currency"];
+          unset($args["_currency"]);
+        }
+      }
+      $args["currency"] = trim($args["currency"]);
+      if($args["currency"] == "") {
+        return $this->getErrorReturn("required parameter: currency");
+      }
+      $args["Currency"] = trim($args["currency"]);
+      unset($args["currency"]);
+
+      if(isSet($args["amount"])) {
+        $args["Amount"] = $args["amount"];
+        unset($args["amount"]);
+      }
+      if(!isSet($args["Amount"])) return $this->getErrorReturn("required parameter: amount");
+
+      if(isSet($args["address"])) {
+        $args["Address"] = $args["address"];
+        unset($args["address"]);
+      }
+      if(!isSet($args["Address"])) return $this->getErrorReturn("required parameter: address");
+
+
+      $resultOBJ = $this->send("SubmitWithdraw" , $args , true);
+      if($resultOBJ["success"] == true) {
+
+      }
+      return $resultOBJ;
     }
 
     public function getMarketHistory($args = null) {
