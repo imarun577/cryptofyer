@@ -16,11 +16,9 @@
   $_currency  = "ETH";
   $market     = $exchange->getMarketPair($_market , $_currency);
 
-
   echo "<h1>Version</h1>";
   $result = $exchange->getVersion();
   debug($result);
-
 
   echo "<h1>Ticker " . $market . "</h1>";
   $result = $exchange->getTicker(
