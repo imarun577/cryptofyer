@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.24
+  * @version    0.25
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "24";
+    private $_version_minor  = "25";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -146,23 +146,35 @@
     }
 
     public function getBalance($args  = null) {
-      if(!empty($args)) {
-        if(isSet($args["currency"])) {
-          $args["Currency"] = $args["currency"];
-          unset($args["currency"]);
-        }
+
+      if(isSet($args["_currency"])) {
+        $args["currency"] = $args["_currency"];
+        unset($args["_currency"]);
       }
+
+      if(!isSet($args["currency"])) {
+        return $this->getErrorReturn("required parameter: currency");
+      }
+
+      $args["Currency"] = $args["currency"];
+      unset($args["currency"]);
 
       $balanceOBJ = $this->send("GetBalance" , $args);
       if($balanceOBJ["success"] == true) {
         $result = array();
-        foreach($balanceOBJ["result"] as $item) {
-          $item["Balance"]  = $item["Total"];
-          $item["Currency"] = $item["Symbol"];
-          $item["address"]  = $item["Address"];
-          $result[] = $item;
+
+        if(isSet($args["Currency"])) {
+          $item = $balanceOBJ["result"][0];
+          $balanceOBJ["result"] = $item;
+        } else {
+          foreach($balanceOBJ["result"] as $item) {
+            $item["Balance"]  = $item["Total"];
+            $item["Currency"] = $item["Symbol"];
+            $item["address"]  = $item["Address"];
+            $result[] = $item;
+          }
+          $balanceOBJ["result"] = $result;
         }
-        $balanceOBJ["result"] = $result;
       }
       return $balanceOBJ;
     }

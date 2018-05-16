@@ -68,12 +68,14 @@
   /*
     BEGIN testing here
   */
-  $result = $exchange->getTicker(
+  $result = $exchange->getCurrencies(
     array(
       "_market" => $_market,
       "_currency" => $_currency
     )
   );
-  debug($result);
+  if($result["success"] == true) {
+    
+  }
   fwrite(STDOUT, "\n");
 ?>

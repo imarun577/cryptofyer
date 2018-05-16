@@ -1,3 +1,6 @@
+v0.25
+- updated getBalance()
+
 v0.24
 - reformatting code
 
