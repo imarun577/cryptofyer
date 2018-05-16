@@ -1,3 +1,6 @@
+v0.4
+- reformatting code
+
 v0.3
 - implemented getOrderbook()
 

@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    LiveCoinApi
   * @author     Fransjo Leihitu
-  * @version    1.9
+  * @version    1.10
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "1";
-    private $_version_minor  = "9";
+    private $_version_minor  = "10";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {

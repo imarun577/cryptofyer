@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    KucoinApi
   * @author     Fransjo Leihitu
-  * @version    0.3
+  * @version    0.4
   *
   * API Documentation :
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "3";
+    private $_version_minor  = "4";
 
     private $currencyAlias  = array();
 

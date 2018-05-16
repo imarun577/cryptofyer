@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    CoinexchangeApi
   * @author     Fransjo Leihitu
-  * @version    0.7
+  * @version    0.8
   *
   * API Documentation : http://coinexchangeio.github.io/slate/
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "7";
+    private $_version_minor  = "8";
 
     private $_markets     = null;
     private $_currencies  = null;

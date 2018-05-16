@@ -1,3 +1,6 @@
+v0.8
+- code reformatting
+
 v0.7
 - Better normalizing getOrderbook()
 

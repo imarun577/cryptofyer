@@ -1,4 +1,4 @@
-CryptoFyer Kucoin v0.3
+CryptoFyer Kucoin v0.4
 ==============
 
 PHP client api for Kucoin
